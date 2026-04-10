@@ -1,0 +1,4 @@
+- name: main | Set up theming
+  include_tasks: setup.yml
+  tags:
+    - setup

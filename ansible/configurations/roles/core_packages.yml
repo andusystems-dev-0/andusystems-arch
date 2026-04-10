@@ -1,0 +1,10 @@
+- name: Install core packages
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: core_packages
+      tags:
+        - core_packages
+        - install

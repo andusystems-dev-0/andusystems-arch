@@ -1,0 +1,90 @@
+@import "colors.rasi"
+
+* {
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+window {
+    background-color: transparent;
+    width:            100%;
+    height:           100%;
+    border:           none;
+    border-radius:    0;
+    padding:          0;
+    orientation:      vertical;
+    children:         [ top-spacer, center-box, bottom-spacer ];
+}
+
+top-spacer    { expand: true; }
+bottom-spacer { expand: true; }
+
+center-box {
+    orientation: horizontal;
+    expand:      false;
+    children:    [ left-spacer, mainbox, right-spacer ];
+}
+
+left-spacer  { expand: true; }
+right-spacer { expand: true; }
+
+mainbox {
+    background-color: @bg;
+    border:           2px;
+    border-color:     @accent;
+    border-radius:    12px;
+    width:            480px;
+    padding:          12px;
+    children:         [ inputbar, listview ];
+    spacing:          8px;
+    expand:           false;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius:    8px;
+    padding:          10px 14px;
+    children:         [ prompt, entry ];
+    spacing:          8px;
+}
+
+prompt {
+    text-color: @accent;
+}
+
+entry {
+    background-color: transparent;
+    placeholder:      "Search apps...";
+    placeholder-color: @fg-dim;
+}
+
+listview {
+    background-color: transparent;
+    lines:            8;
+    scrollbar:        false;
+    spacing:          4px;
+}
+
+element {
+    background-color: transparent;
+    border-radius:    8px;
+    padding:          8px 12px;
+    spacing:          10px;
+    orientation:      horizontal;
+}
+
+element normal.normal   { background-color: transparent; }
+element normal.urgent   { text-color: @urgent; }
+element selected.normal {
+    background-color: @bg-alt;
+    text-color:       @accent;
+}
+
+element-icon {
+    size:           24px;
+    vertical-align: 0.5;
+}
+
+element-text {
+    vertical-align: 0.5;
+}

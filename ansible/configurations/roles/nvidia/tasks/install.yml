@@ -1,0 +1,54 @@
+- name: install | Enable multilib repository
+  ansible.builtin.blockinfile:
+    path: /etc/pacman.conf
+    marker: "# {mark} ANSIBLE MANAGED MULTILIB"
+    block: |
+      [multilib]
+      Include = /etc/pacman.d/mirrorlist
+  become: true
+
+- name: install | Allow pacman without password for yay
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/pacman-nopasswd
+    content: "admin ALL=(ALL) NOPASSWD: /usr/bin/pacman\n"
+    validate: visudo -cf %s
+  become: true
+
+- name: install | Sync package databases
+  ansible.builtin.command: pacman -Sy
+  become: true
+
+- name: install | Install NVIDIA packages via pacman
+  ansible.builtin.command: pacman -S --noconfirm --needed {{ nvidia_packages | join(' ') }}
+  become: true
+
+- name: install | Revoke passwordless pacman after install
+  ansible.builtin.file:
+    path: /etc/sudoers.d/pacman-nopasswd
+    state: absent
+  become: true
+
+- name: install | Configure NVIDIA DRM kernel module options
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/nvidia.conf
+    content: "options nvidia-drm modeset=1 fbdev=1\n"
+  become: true
+
+- name: install | Add NVIDIA modules to mkinitcpio
+  ansible.builtin.lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^MODULES='
+    line: 'MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
+    backrefs: yes
+  become: true
+
+- name: install | Rebuild initramfs
+  ansible.builtin.command: mkinitcpio -P
+  become: true
+
+- name: install | Enable nvidia-persistenced service
+  ansible.builtin.systemd:
+    name: nvidia-persistenced.service
+    enabled: true
+    daemon_reload: true
+  become: true

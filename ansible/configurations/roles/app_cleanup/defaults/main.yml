@@ -1,0 +1,28 @@
+---
+# Packages to fully remove
+packages_remove:
+  - htop
+  - dolphin
+  - vim
+
+# Replacement / new packages to install
+packages_install:
+  - btop
+
+# App launcher entries to hide (NoDisplay=true override in ~/.local/share/applications/)
+# These apps are kept installed but hidden from rofi/XDG launchers
+launchers_hide:
+  - bssh.desktop
+  - bvnc.desktop
+  - avahi-discover.desktop
+  - org.freedesktop.IBus.Setup.desktop
+  - org.freedesktop.IBus.Panel.Emojier.desktop
+  - org.freedesktop.IBus.Panel.Extension.Gtk3.desktop
+  - org.freedesktop.IBus.Panel.Wayland.Gtk3.desktop
+  - rofi.desktop
+  - rofi-theme-selector.desktop
+  - qv4l2.desktop
+  - qvidcap.desktop
+  - uuctl.desktop
+  - xgps.desktop
+  - xgpsspeed.desktop

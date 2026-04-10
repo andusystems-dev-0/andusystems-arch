@@ -1,0 +1,14 @@
+- name: main | Remove unwanted packages
+  include_tasks: remove.yml
+  tags:
+    - remove
+
+- name: main | Install replacement packages
+  include_tasks: install.yml
+  tags:
+    - install
+
+- name: main | Hide unwanted app launcher entries
+  include_tasks: hide_launchers.yml
+  tags:
+    - hide_launchers

@@ -1,0 +1,10 @@
+- name: Install desktop packages
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: desktop_packages
+      tags:
+        - desktop_packages
+        - install

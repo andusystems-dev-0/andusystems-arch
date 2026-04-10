@@ -1,0 +1,11 @@
+#!/bin/bash
+ZEN_PROFILE=$(find -L ~/.config/zen -name "cookies.sqlite" 2>/dev/null | head -1 | xargs -I{} dirname "{}")
+
+if [ -z "$ZEN_PROFILE" ]; then
+  echo "Zen Browser profile not found. Log into YouTube in Zen first."
+  exit 1
+fi
+
+mpv "https://www.youtube.com/feed/recommended" \
+  --wayland-app-id=yt-recommended \
+  --ytdl-raw-options="cookies-from-browser=firefox:${ZEN_PROFILE},playlist-items=1:25"

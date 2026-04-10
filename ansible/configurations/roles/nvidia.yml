@@ -1,0 +1,10 @@
+- name: Install NVIDIA drivers
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: nvidia
+      tags:
+        - nvidia
+        - install

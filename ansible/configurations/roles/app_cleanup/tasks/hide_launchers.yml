@@ -1,0 +1,25 @@
+- name: hide_launchers | Ensure local applications directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications"
+    state: directory
+    mode: '0755'
+
+- name: hide_launchers | Copy system desktop file to local dir
+  ansible.builtin.copy:
+    src: "/usr/share/applications/{{ item }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/{{ item }}"
+    remote_src: true
+  loop: "{{ launchers_hide }}"
+  ignore_errors: true
+
+- name: hide_launchers | Set NoDisplay=true in local desktop files
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/{{ item }}"
+    regexp: "^NoDisplay="
+    insertafter: "\\[Desktop Entry\\]"
+    line: "NoDisplay=true"
+  loop: "{{ launchers_hide }}"
+  ignore_errors: true
+
+- name: hide_launchers | Refresh desktop database
+  ansible.builtin.shell: update-desktop-database "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/"

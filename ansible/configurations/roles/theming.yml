@@ -1,0 +1,9 @@
+- name: Apply theming
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: theming
+      tags:
+        - theming

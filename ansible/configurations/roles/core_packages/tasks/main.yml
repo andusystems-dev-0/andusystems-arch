@@ -1,0 +1,4 @@
+- name: main | Install packages
+  import_tasks: install.yml
+  tags:
+    - install

@@ -1,0 +1,9 @@
+- name: Bootstrap workspace repos from forgejo
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: workspace_repos
+      tags:
+        - workspace_repos

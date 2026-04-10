@@ -1,0 +1,15 @@
+- name: install | Allow pacman without password for yay
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/pacman-nopasswd
+    content: "admin ALL=(ALL) NOPASSWD: /usr/bin/pacman\n"
+    validate: visudo -cf %s
+  become: true
+
+- name: install | Install replacement packages via yay
+  ansible.builtin.shell: yay -S --noconfirm --needed --sudoflags "-S" {{ packages_install | join(' ') }}
+
+- name: install | Revoke passwordless pacman after install
+  ansible.builtin.file:
+    path: /etc/sudoers.d/pacman-nopasswd
+    state: absent
+  become: true

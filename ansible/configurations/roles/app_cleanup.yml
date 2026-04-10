@@ -1,0 +1,9 @@
+- name: App cleanup — remove bloat, install replacements, hide launchers
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: app_cleanup
+      tags:
+        - app_cleanup

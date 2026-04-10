@@ -1,0 +1,29 @@
+- name: workspace_repos | Ensure workspace root exists
+  ansible.builtin.file:
+    path: "{{ workspace_repos_root }}"
+    state: directory
+    mode: '0755'
+
+- name: workspace_repos | Clone each repo from forgejo
+  ansible.builtin.git:
+    repo: "{{ item.forgejo_url }}"
+    dest: "{{ workspace_repos_root }}/{{ item.dest | default(item.name) }}"
+    update: false
+    remote: forgejo
+  loop: "{{ workspace_repos }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: workspace_repos | Add github mirror as origin remote
+  ansible.builtin.command:
+    cmd: "git remote add origin {{ item.github_url }}"
+    chdir: "{{ workspace_repos_root }}/{{ item.dest | default(item.name) }}"
+  loop: "{{ workspace_repos }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: item.github_url is defined
+  register: add_origin
+  changed_when: add_origin.rc == 0
+  failed_when:
+    - add_origin.rc != 0
+    - "'remote origin already exists' not in (add_origin.stderr | default(''))"

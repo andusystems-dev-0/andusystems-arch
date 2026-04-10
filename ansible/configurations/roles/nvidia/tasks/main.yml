@@ -1,0 +1,4 @@
+- name: main | Install NVIDIA drivers
+  import_tasks: install.yml
+  tags:
+    - install

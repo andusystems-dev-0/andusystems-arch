@@ -1,0 +1,23 @@
+- name: dotfiles | Ensure dotfiles .config directory exists
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/../../../dotfiles/home/.config"
+    state: directory
+    mode: '0755'
+
+- name: dotfiles | Find unmanaged .config directories
+  ansible.builtin.find:
+    paths: "{{ ansible_facts['env']['HOME'] }}/.config"
+    file_type: directory
+    recurse: false
+    follow: false
+  register: config_dirs
+
+- name: dotfiles | Adopt unmanaged configs into dotfiles repo
+  ansible.builtin.shell: "mv '{{ item.path }}' '{{ playbook_dir }}/../../../dotfiles/home/.config/{{ item.path | basename }}'"
+  loop: "{{ config_dirs.files }}"
+  when:
+    - not item.islnk
+    - item.path | basename not in dotfiles_exclude
+
+- name: dotfiles | Stow home package
+  ansible.builtin.shell: "stow --dir={{ playbook_dir }}/../../../dotfiles --target={{ ansible_facts['env']['HOME'] }} --restow home"

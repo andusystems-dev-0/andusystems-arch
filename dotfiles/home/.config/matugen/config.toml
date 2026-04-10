@@ -1,0 +1,36 @@
+[config]
+mode = "dark"
+reload_apps = false
+set_wallpaper = false
+
+[templates.waybar-colors]
+input_path = "~/.config/matugen/templates/waybar-colors.css"
+output_path = "~/.config/waybar/colors.css"
+
+[templates.rofi-colors]
+input_path = "~/.config/matugen/templates/rofi-colors.rasi"
+output_path = "~/.config/rofi/colors.rasi"
+
+[templates.hypr-colors]
+input_path = "~/.config/matugen/templates/hypr-colors.conf"
+output_path = "~/.config/hypr/colors.conf"
+
+[templates.kitty-colors]
+input_path = "~/.config/matugen/templates/kitty-colors.conf"
+output_path = "~/.config/kitty/colors.conf"
+
+[templates.gtk3]
+input_path = "~/.config/matugen/templates/gtk3.css"
+output_path = "~/.config/gtk-3.0/gtk.css"
+
+[templates.gtk4]
+input_path = "~/.config/matugen/templates/gtk4.css"
+output_path = "~/.config/gtk-4.0/gtk.css"
+
+[templates.nvim-colors]
+input_path = "~/.config/matugen/templates/nvim-colors.lua"
+output_path = "~/.config/nvim/lua/colors/matugen.lua"
+
+[templates.swaync]
+input_path = "~/.config/matugen/templates/swaync.css"
+output_path = "~/.config/swaync/style.css"

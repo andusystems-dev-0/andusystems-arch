@@ -1,0 +1,7 @@
+- name: main | Set up youtube-tui and yt-dlp
+  include_tasks:
+    file: setup.yml
+    apply:
+      tags: youtube_tui
+  tags:
+    - youtube_tui

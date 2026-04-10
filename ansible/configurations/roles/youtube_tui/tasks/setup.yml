@@ -1,0 +1,71 @@
+- name: youtube-tui | Make yt-recommended script executable
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/yt-recommended"
+    mode: '0755'
+  become: false
+
+- name: youtube-tui | Create yt-dlp config directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/yt-dlp"
+    state: directory
+    mode: '0755'
+  become: false
+
+- name: youtube-tui | Create youtube-tui saved media directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/share/youtube-tui/saved"
+    state: directory
+    mode: '0755'
+  become: false
+
+# Zen Browser (Firefox-based) stores profiles under ~/.config/zen/
+# yt-dlp supports reading Firefox-compatible cookie databases directly.
+# This runs on every playbook invocation so the config auto-updates once the
+# user has logged into YouTube in Zen and the profile exists.
+- name: youtube-tui | Find Zen browser cookies database
+  ansible.builtin.find:
+    paths: "{{ ansible_facts['env']['HOME'] }}/.config/zen"
+    patterns: "cookies.sqlite"
+    recurse: yes
+    file_type: file
+  register: zen_cookies
+  ignore_errors: yes
+
+- name: youtube-tui | Write yt-dlp config (Zen cookies found — authenticated)
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/yt-dlp/config"
+    content: |
+      # yt-dlp config — managed by Ansible
+      # Re-run the playbook after logging into YouTube in Zen to update this path.
+      --cookies-from-browser "firefox:{{ zen_cookies.files[0].path | dirname }}"
+      --format bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best
+  when: zen_cookies is not failed and zen_cookies.files | length > 0
+  become: false
+
+- name: youtube-tui | Write yt-dlp config (no Zen profile yet)
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/yt-dlp/config"
+    content: |
+      # yt-dlp config — managed by Ansible
+      # Log into YouTube in Zen Browser, then re-run the playbook to enable cookie auth.
+      # --cookies-from-browser firefox:/home/admin/.config/zen/YOUR-PROFILE/
+      --format bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best
+  when: zen_cookies is failed or zen_cookies.files | length == 0
+  become: false
+
+# Check whether the user has completed the in-app YouTube login.
+# youtube-tui uses the rustypipe library which creates ~/.cache/rustypipe/
+# on first authenticated use.
+- name: youtube-tui | Check for rustypipe auth cache
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.cache/rustypipe"
+  register: rustypipe_cache
+  become: false
+
+- name: youtube-tui | Remind user to complete YouTube login
+  ansible.builtin.debug:
+    msg: >-
+      youtube-tui: not logged in to YouTube yet.
+      Open youtube-tui → Settings → Login.
+      You will get a device code to enter at https://google.com/device
+  when: not rustypipe_cache.stat.exists

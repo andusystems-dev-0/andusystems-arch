@@ -1,0 +1,44 @@
+# Where every working repo lives. Hyprland and sentinel both expect this path.
+workspace_repos_root: "{{ ansible_facts['env']['HOME'] }}/andusystems"
+
+# Each entry: name, forgejo_url, optional github_url, optional dest (relative to root).
+# - forgejo_url is the source of truth (cloned as the `forgejo` remote).
+# - github_url, if set, is added as `origin` for sanitized mirror pushes.
+# - dest defaults to {{ name }} but can be overridden when the on-disk dir
+#   doesn't match the repo name (e.g. nested vault layout).
+workspace_repos:
+  - name: andusystems-management
+    forgejo_url: https://forgejo.andusystems.com/andusystems/andusystems-management.git
+    github_url:  https://github.com/andusystems-dev-0/andusystems-management.git
+
+  - name: andusystems-monitoring
+    forgejo_url: https://forgejo.andusystems.com/andusystems/andusystems-monitoring.git
+    github_url:  https://github.com/andusystems-dev-0/andusystems-monitoring.git
+
+  - name: andusystems-networking
+    forgejo_url: https://forgejo.andusystems.com/andusystems/andusystems-networking.git
+    github_url:  https://github.com/andusystems-dev-0/andusystems-networking.git
+
+  - name: andusystems-storage
+    forgejo_url: https://forgejo.andusystems.com/andusystems/andusystems-storage.git
+    github_url:  https://github.com/andusystems-dev-0/andusystems-storage.git
+
+  - name: andusystems-portfolio
+    forgejo_url: https://forgejo.andusystems.com/andusystems/andusystems-portfolio.git
+    github_url:  https://github.com/andusystems-dev-0/andusystems-portfolio.git
+
+  - name: andusystems-slimerio
+    forgejo_url: https://forgejo.andusystems.com/andusystems/andusystems-slimerio.git
+    github_url:  https://github.com/andusystems-dev-0/andusystems-slimerio.git
+
+  - name: andusystems-sentinel
+    forgejo_url: https://forgejo.andusystems.com/andusystems/andusystems-sentinel.git
+    github_url:  https://github.com/andusystems-dev-0/andusystems-sentinel.git
+
+  - name: Portfolio
+    forgejo_url: https://forgejo.andusystems.com/andusystems/Portfolio.git
+
+  # Obsidian vault lives one level deeper and uses a different forgejo org.
+  - name: andusystems-obsidian
+    dest: Obsidian/andusystems-obsidian
+    forgejo_url: https://forgejo.andusystems.com/forgejo_admin/andusystems-obsidian.git

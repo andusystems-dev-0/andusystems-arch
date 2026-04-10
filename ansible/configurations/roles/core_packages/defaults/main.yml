@@ -1,0 +1,8 @@
+aur_packages:
+  - networkmanager
+  - neovim
+  - stow
+  - lazygit
+  - neofetch
+  - playerctl
+  - lm_sensors

@@ -1,0 +1,43 @@
+# [AI_ASSISTANT] Code local files
+.[AI_ASSISTANT]/
+
+# Matugen-generated theme files (change on every wallpaper rotation)
+dotfiles/home/.config/swaync/style.css
+dotfiles/home/.config/hypr/colors.conf
+dotfiles/home/.config/kitty/colors.conf
+dotfiles/home/.config/rofi/colors.rasi
+dotfiles/home/.config/waybar/colors.css
+dotfiles/home/.config/nvim/lua/colors/matugen.lua
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Ansible-generated configs (not stowed — contain dynamic runtime values)
+dotfiles/home/.config/yt-dlp/
+
+# Sensitive or system-generated configs
+dotfiles/home/.config/zen/
+dotfiles/home/.config/session/
+dotfiles/home/.config/pulse/
+dotfiles/home/.config/ibus/
+dotfiles/home/.config/go/
+dotfiles/home/.config/gh/
+dotfiles/home/.config/dconf/
+dotfiles/home/.config/gtk-3.0/
+dotfiles/home/.config/gtk-4.0/
+
+# Pangolin — contains live session tokens and OLM secret credentials
+dotfiles/home/.config/pangolin/
+
+# Cursor IDE — contains cookies, trust tokens, machine ID, session data, and caches
+dotfiles/home/.config/Cursor/
+dotfiles/home/.config/cursor/
+dotfiles/home/.config/hypr/colors.conf
+dotfiles/home/.config/hypr/colors.conf
+dotfiles/home/.config/kitty/colors.conf
+dotfiles/home/.config/nvim/lua/colors/matugen.lua
+dotfiles/home/.config/rofi/colors.rasi
+dotfiles/home/.config/waybar/colors.css
+dotfiles/home/.config/swaync/style.css
+dotfiles/home/Wallpapers/*

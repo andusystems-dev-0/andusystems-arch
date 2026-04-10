@@ -1,0 +1,18 @@
+- name: remove | Allow pacman without password
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/pacman-nopasswd
+    content: "admin ALL=(ALL) NOPASSWD: /usr/bin/pacman\n"
+    validate: visudo -cf %s
+  become: true
+
+- name: remove | Remove unwanted packages
+  ansible.builtin.shell: >
+    pacman -Q "{{ item }}" > /dev/null 2>&1 && pacman -Rns --noconfirm "{{ item }}" || true
+  loop: "{{ packages_remove }}"
+  become: true
+
+- name: remove | Revoke passwordless pacman
+  ansible.builtin.file:
+    path: /etc/sudoers.d/pacman-nopasswd
+    state: absent
+  become: true

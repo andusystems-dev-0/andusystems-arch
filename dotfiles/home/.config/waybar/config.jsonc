@@ -1,0 +1,61 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 27,
+    "margin-top": 5,
+    "margin-left": 12,
+    "margin-right": 12,
+    "spacing": 3,
+
+    "modules-left": [],
+    "modules-center": [
+        "hyprland/workspaces"
+    ],
+    "modules-right": [
+        "mpris",
+        "clock"
+    ],
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "default": "●",
+            "active": "●",
+            "empty": "○"
+        },
+        "persistent-workspaces": {
+            "*": 5
+        }
+    },
+
+    "mpris": {
+        "format": "<span font='15'>{status_icon}</span><span rise='3500'>  {title} — {artist}  {position} / {length}</span>",
+        "format-paused": "<span font='15'>{status_icon}</span><span rise='3500'>  {title} — {artist}  {position} / {length}</span>",
+        "format-stopped": "",
+        "player-icons": {
+            "default": "󰎈",
+            "firefox": "󰈹",
+            "chromium": "󰊯",
+            "spotify": "󰓇"
+        },
+        "status-icons": {
+            "playing": "󰐊",
+            "paused": "󰏤",
+            "stopped": "󰓛"
+        },
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-click-middle": "playerctl previous",
+        "on-scroll-up": "playerctl volume 0.05+",
+        "on-scroll-down": "playerctl volume 0.05-",
+        "max-length": 55,
+        "interval": 1,
+        "tooltip-format": "{player}\n{title}\n{artist} — {album}"
+    },
+
+    "clock": {
+        "format": "{:%m/%d/%y  %I:%M:%S %p}",
+        "interval": 1,
+        "tooltip-format": "<tt>{calendar}</tt>"
+    }
+}

@@ -1,0 +1,17 @@
+[Unit]
+Description=Andusystems Sentinel — Forgejo→GitHub mirror daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/admin/andusystems/andusystems-sentinel
+ExecStart=/home/admin/andusystems/andusystems-sentinel/bin/sentinel --config /home/admin/andusystems/andusystems-sentinel/config.yaml
+Restart=on-failure
+RestartSec=10s
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sentinel
+
+[Install]
+WantedBy=default.target

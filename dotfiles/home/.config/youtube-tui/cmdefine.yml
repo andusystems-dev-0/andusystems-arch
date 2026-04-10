@@ -1,0 +1,27 @@
+video: loadpage video
+resume: mpv sprop pause no ;; echo mpv Player resumed
+pause: mpv sprop pause yes ;; echo mpv Player paused
+watchhistory: loadpage watchhistory
+r: parrun $HOME/.local/bin/yt-recommended
+back: mpv playlist-previous ;; echo mpv Skipped
+popular: loadpage popular
+h: help
+q: quit
+v: version
+rc: reload configs
+rl: reload
+playlist: loadpage playlist
+bookmarks: loadpage bookmarks
+channel: loadpage channel
+cp: copy
+tpause: mpv tprop pause ;; echo success Toggled player pause
+recommended: parrun $HOME/.local/bin/yt-recommended
+x: quit
+print: echo
+sub: sync
+trending: loadpage trending
+feed: loadpage feed
+search: loadpage search
+library: loadpage library
+exit: quit
+next: mpv playlist-next ;; echo mpv Skipped

@@ -1,0 +1,11 @@
+dotfiles_exclude:
+  - zen
+  - session
+  - pulse
+  - ibus
+  - go
+  - gh
+  - dconf
+  - gtk-3.0
+  - gtk-4.0
+  - yt-dlp

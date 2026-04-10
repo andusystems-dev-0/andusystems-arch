@@ -1,0 +1,161 @@
+- name: theming | Create Wallpapers directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/Wallpapers"
+    state: directory
+    mode: '0755'
+  become: false
+
+- name: theming | Create .local/bin directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin"
+    state: directory
+    mode: '0755'
+  become: false
+
+- name: theming | Make theme-switch script executable
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/theme-switch.sh"
+    mode: '0755'
+  become: false
+
+- name: theming | Make rofi launcher script executable
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/rofi-launcher.sh"
+    mode: '0755'
+  become: false
+
+- name: theming | Make nightlight script executable
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/nightlight.sh"
+    mode: '0755'
+  become: false
+
+- name: theming | Make launch-btop script executable
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/launch-btop.sh"
+    mode: '0755'
+  become: false
+
+- name: theming | Make launch-nmtui script executable
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/launch-nmtui.sh"
+    mode: '0755'
+  become: false
+
+- name: theming | Make launch-bluetuith script executable
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/launch-bluetuith.sh"
+    mode: '0755'
+  become: false
+
+- name: theming | Make screenshot script executable
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/screenshot.sh"
+    mode: '0755'
+  become: false
+
+- name: theming | Create gtk-3.0 config directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/gtk-3.0"
+    state: directory
+    mode: '0755'
+  become: false
+
+- name: theming | Create gtk-4.0 config directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/gtk-4.0"
+    state: directory
+    mode: '0755'
+  become: false
+
+- name: theming | Create fallback hypr colors.conf if not present
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/hypr/colors.conf"
+    content: |
+      # Fallback static colors — overwritten by matugen on first theme-switch run
+      $col_active_1 = rgba(33ccffee)
+      $col_active_2 = rgba(00ffaaee)
+      $col_inactive  = rgba(1a1a2eaa)
+      $col_shadow    = rgba(1a1a2eee)
+    force: false
+  become: false
+
+- name: theming | Enable NetworkManager system service
+  ansible.builtin.systemd:
+    name: NetworkManager.service
+    enabled: true
+    state: started
+  become: true
+
+- name: theming | Enable power-profiles-daemon system service
+  ansible.builtin.systemd:
+    name: power-profiles-daemon.service
+    enabled: true
+    state: started
+  become: true
+
+- name: theming | Create user dbus services directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/share/dbus-1/services"
+    state: directory
+    mode: '0755'
+  become: false
+
+- name: theming | Override swaync D-Bus activation to use systemd
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/share/dbus-1/services/org.erikreider.swaync.service"
+    content: |
+      [D-BUS Service]
+      Name=org.erikreider.swaync
+      Exec=/bin/false
+      SystemdService=swaync.service
+  become: false
+
+- name: theming | Override swaync cc D-Bus activation to use systemd
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/share/dbus-1/services/org.erikreider.swaync.cc.service"
+    content: |
+      [D-BUS Service]
+      Name=org.erikreider.swaync.cc
+      Exec=/bin/false
+      SystemdService=swaync.service
+  become: false
+
+- name: theming | Stop and disable dunst to avoid notification daemon conflict
+  ansible.builtin.systemd:
+    name: dunst.service
+    enabled: false
+    state: stopped
+    scope: user
+  become: false
+  failed_when: false
+
+- name: theming | Kill any remaining dunst processes
+  ansible.builtin.command: pkill -x dunst
+  become: false
+  failed_when: false
+  changed_when: false
+
+- name: theming | Enable swaync user service
+  ansible.builtin.systemd:
+    name: swaync.service
+    enabled: true
+    state: started
+    scope: user
+  become: false
+
+- name: theming | Enable and start theme-switch timer
+  ansible.builtin.systemd:
+    name: theme-switch.timer
+    enabled: true
+    state: started
+    scope: user
+  become: false
+
+- name: theming | Enable and start nightlight timer
+  ansible.builtin.systemd:
+    name: nightlight.timer
+    enabled: true
+    state: started
+    scope: user
+  become: false

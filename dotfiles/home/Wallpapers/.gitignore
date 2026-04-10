@@ -1,0 +1,4 @@
+# Ignore all image files — place your wallpapers here, they are not tracked
+*
+!.gitignore
+!README.md

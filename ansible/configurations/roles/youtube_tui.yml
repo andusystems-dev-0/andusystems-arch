@@ -1,0 +1,9 @@
+- name: Configure youtube-tui and yt-dlp
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: youtube_tui
+      tags:
+        - youtube_tui

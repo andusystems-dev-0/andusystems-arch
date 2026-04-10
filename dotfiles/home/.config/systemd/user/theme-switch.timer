@@ -1,0 +1,11 @@
+[Unit]
+Description=Rotate wallpaper and reapply color scheme every 5 minutes
+After=graphical-session.target
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Persistent=false
+
+[Install]
+WantedBy=timers.target
