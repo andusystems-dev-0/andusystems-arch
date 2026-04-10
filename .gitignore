@@ -41,3 +41,7 @@ dotfiles/home/.config/rofi/colors.rasi
 dotfiles/home/.config/waybar/colors.css
 dotfiles/home/.config/swaync/style.css
 dotfiles/home/Wallpapers/*
+dotfiles/home/.config/rofi/colors.rasi
+dotfiles/home/.config/nvim/lua/colors/matugen.lua
+dotfiles/home/.config/kitty/colors.conf
+dotfiles/home/.config/hypr/colors.conf
