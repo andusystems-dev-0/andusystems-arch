@@ -1,12 +1,18 @@
-- name: rust_tools | Build media-menu
+- name: rust_tools | Build crate (release)
   ansible.builtin.command:
     cmd: cargo build --release
-    chdir: "{{ playbook_dir }}/../../../tools/media-menu"
+    chdir: "{{ playbook_dir }}/../../../tools/{{ item.name }}"
   register: cargo_build
   changed_when: "'Compiling' in cargo_build.stderr"
+  loop: "{{ rust_tools_binaries }}"
+  loop_control:
+    label: "{{ item.name }}"
 
-- name: rust_tools | Install media-menu to ~/.local/bin
+- name: rust_tools | Install binary to ~/.local/bin
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/../../../tools/media-menu/target/release/media-menu"
-    dest: "{{ ansible_facts['env']['HOME'] }}/.local/bin/media-menu"
+    src: "{{ playbook_dir }}/../../../tools/{{ item.name }}/target/release/{{ item.name }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/bin/{{ item.name }}"
     mode: '0755'
+  loop: "{{ rust_tools_binaries }}"
+  loop_control:
+    label: "{{ item.name }}"

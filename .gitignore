@@ -184,6 +184,7 @@ Wallpapers
 # Compiled binaries in dotfiles (installed by Ansible, not committed)
 # -----------------------------------------------------------------------------
 dotfiles/home/.local/bin/media-menu
+dotfiles/home/.local/bin/launcher
 
 # -----------------------------------------------------------------------------
 # Rust build artifacts
