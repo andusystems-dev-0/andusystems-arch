@@ -14,8 +14,11 @@
     validate: visudo -cf %s
   become: true
 
-- name: install | Sync package databases
-  ansible.builtin.command: pacman -Sy
+- name: install | Full system upgrade
+  # Must be -Syu, not -Sy. A partial upgrade desyncs `linux` from
+  # `linux-headers`, which leaves nvidia-open-dkms with no kernel it can
+  # build against and breaks the subsequent `mkinitcpio -P`.
+  ansible.builtin.command: pacman -Syu --noconfirm
   become: true
 
 - name: install | Remove conflicting nvidia-open package if present
