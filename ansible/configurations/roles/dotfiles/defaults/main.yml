@@ -1,11 +1,62 @@
+# Directories under ~/.config that the dotfiles role MUST NOT adopt into the
+# repo. Keep this list in sync with .gitignore — this is the *primary* line
+# of defense against committing secrets, .gitignore is the safety net.
+#
+# Add a name here whenever a new ~/.config/<dir> contains tokens, session
+# state, cookies, caches, or any other non-reproducible runtime data.
 dotfiles_exclude:
+  # System / desktop runtime state
   - zen
   - session
   - pulse
   - ibus
-  - go
-  - gh
   - dconf
   - gtk-3.0
   - gtk-4.0
+
+  # Toolchain caches with credentials / module proxy state
+  - go
+  - gh
+  - helm
+  - op
+  - rclone
+  - restic
+  - borg
+  - sops
+  - age
   - yt-dlp
+
+  # Cluster / cloud CLI credentials
+  - argocd
+  - k9s
+  - kube
+  - doctl
+  - gcloud
+  - azure
+
+  # IDE / editor session data and tokens
+  - Cursor
+  - cursor
+  - Code
+  - Code - OSS
+  - VSCodium
+  - JetBrains
+
+  # Browser / chat client profiles (cookies, session tokens, message history)
+  - discord
+  - Slack
+  - Element
+  - Signal
+  - SchildiChat
+  - chromium
+  - google-chrome
+  - BraveSoftware
+  - firefox
+  - thunderbird
+  - vivaldi
+  - opera
+  - Vaultwarden
+  - Bitwarden
+
+  # Pangolin — live session tokens and OLM secret credentials
+  - pangolin

@@ -1,7 +1,31 @@
-# [AI_ASSISTANT] Code local files
-.[AI_ASSISTANT]/
+# =============================================================================
+# andusystems-arch .gitignore
+#
+# Defense-in-depth: the dotfiles ansible role auto-adopts every ~/.config/*
+# directory into this repo unless excluded. This file is the *second* line of
+# defense — primary exclusion lives in
+# ansible/configurations/roles/dotfiles/defaults/main.yml (`dotfiles_exclude`).
+# Keep both in sync when adding new sensitive paths.
+#
+# Goal: never commit secrets, session state, caches, or history — while
+# preserving everything needed to rebuild the system from scratch via Ansible.
+# =============================================================================
 
+# -----------------------------------------------------------------------------
+# [AI_ASSISTANT] Code local files
+# -----------------------------------------------------------------------------
+.[AI_ASSISTANT]/
+.[AI_ASSISTANT].json
+
+# -----------------------------------------------------------------------------
+# Python bytecode
+# -----------------------------------------------------------------------------
+__pycache__/
+*.pyc
+
+# -----------------------------------------------------------------------------
 # Matugen-generated theme files (change on every wallpaper rotation)
+# -----------------------------------------------------------------------------
 dotfiles/home/.config/swaync/style.css
 dotfiles/home/.config/hypr/colors.conf
 dotfiles/home/.config/kitty/colors.conf
@@ -9,30 +33,170 @@ dotfiles/home/.config/rofi/colors.rasi
 dotfiles/home/.config/waybar/colors.css
 dotfiles/home/.config/nvim/lua/colors/matugen.lua
 
-# Python bytecode
-__pycache__/
-*.pyc
-
+# -----------------------------------------------------------------------------
 # Ansible-generated configs (not stowed — contain dynamic runtime values)
+# -----------------------------------------------------------------------------
 dotfiles/home/.config/yt-dlp/
 
-# Sensitive or system-generated configs
+# -----------------------------------------------------------------------------
+# System / desktop runtime state — not needed for rebuild
+# -----------------------------------------------------------------------------
 dotfiles/home/.config/zen/
 dotfiles/home/.config/session/
 dotfiles/home/.config/pulse/
 dotfiles/home/.config/ibus/
-dotfiles/home/.config/go/
-dotfiles/home/.config/gh/
 dotfiles/home/.config/dconf/
 dotfiles/home/.config/gtk-3.0/
 dotfiles/home/.config/gtk-4.0/
 
-# Pangolin — contains live session tokens and OLM secret credentials
-dotfiles/home/.config/pangolin/
+# -----------------------------------------------------------------------------
+# Toolchain caches with credentials / module proxy state
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/go/
+dotfiles/home/.config/gh/
+dotfiles/home/.config/helm/
+dotfiles/home/.config/op/
+dotfiles/home/.config/rclone/
+dotfiles/home/.config/restic/
+dotfiles/home/.config/borg/
+dotfiles/home/.config/sops/
+dotfiles/home/.config/age/
 
-# Cursor IDE — contains cookies, trust tokens, machine ID, session data, and caches
+# -----------------------------------------------------------------------------
+# Cluster / cloud CLI credentials
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/argocd/
+dotfiles/home/.config/k9s/
+dotfiles/home/.config/kube/
+dotfiles/home/.config/doctl/
+dotfiles/home/.config/gcloud/
+dotfiles/home/.config/azure/
+
+# -----------------------------------------------------------------------------
+# IDE / editor session data and tokens
+# -----------------------------------------------------------------------------
 dotfiles/home/.config/Cursor/
 dotfiles/home/.config/cursor/
+dotfiles/home/.config/Code/
+dotfiles/home/.config/Code - OSS/
+dotfiles/home/.config/VSCodium/
+dotfiles/home/.config/JetBrains/
 
-# Wallpapers
+# -----------------------------------------------------------------------------
+# Browser / chat client profiles (cookies, session tokens, message history)
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/discord/
+dotfiles/home/.config/Slack/
+dotfiles/home/.config/Element/
+dotfiles/home/.config/Signal/
+dotfiles/home/.config/SchildiChat/
+dotfiles/home/.config/chromium/
+dotfiles/home/.config/google-chrome/
+dotfiles/home/.config/BraveSoftware/
+dotfiles/home/.config/firefox/
+dotfiles/home/.config/thunderbird/
+dotfiles/home/.config/vivaldi/
+dotfiles/home/.config/opera/
+dotfiles/home/.config/Vaultwarden/
+dotfiles/home/.config/Bitwarden/
+
+# -----------------------------------------------------------------------------
+# Pangolin — contains live session tokens and OLM secret credentials
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/pangolin/
+
+# -----------------------------------------------------------------------------
+# Sensitive home-level dot directories (would land at dotfiles/home/.X)
+# -----------------------------------------------------------------------------
+dotfiles/home/.ssh/
+dotfiles/home/.gnupg/
+dotfiles/home/.kube/
+dotfiles/home/.ansible/
+dotfiles/home/.terraform.d/
+dotfiles/home/.docker/
+dotfiles/home/.aws/
+dotfiles/home/.gcloud/
+dotfiles/home/.azure/
+dotfiles/home/.npm/
+dotfiles/home/.cargo/
+dotfiles/home/.rustup/
+dotfiles/home/.ollama/
+dotfiles/home/.pki/
+dotfiles/home/.gnome/
+dotfiles/home/.mozilla/
+dotfiles/home/.thunderbird/
+dotfiles/home/.password-store/
+dotfiles/home/.vault-token
+dotfiles/home/.netrc
+dotfiles/home/.pgpass
+dotfiles/home/.my.cnf
+dotfiles/home/.pypirc
+dotfiles/home/.boto
+
+# -----------------------------------------------------------------------------
+# Shell / tool history (may contain accidentally-pasted secrets)
+# -----------------------------------------------------------------------------
+dotfiles/home/.bash_history
+dotfiles/home/.zsh_history
+dotfiles/home/.python_history
+dotfiles/home/.node_repl_history
+dotfiles/home/.lesshst
+dotfiles/home/.viminfo
+dotfiles/home/.wget-hsts
+dotfiles/home/.psql_history
+dotfiles/home/.mysql_history
+dotfiles/home/.sqlite_history
+
+# -----------------------------------------------------------------------------
+# Generic secret / credential patterns (apply anywhere in the repo)
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.sample
+secrets.yml
+secrets.yaml
+secrets.json
+credentials
+credentials.json
+credentials.yml
+credentials.yaml
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*_rsa
+*_dsa
+*_ecdsa
+*_ed25519
+known_hosts
+authorized_keys
+
+# -----------------------------------------------------------------------------
+# Editor / OS cruft
+# -----------------------------------------------------------------------------
+*.swp
+*.swo
+*.swn
+*~
+*.bak
+*.backup
+*.orig
+*.rej
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -----------------------------------------------------------------------------
+# Wallpapers (large binaries — kept out of git)
+# -----------------------------------------------------------------------------
 dotfiles/home/Wallpapers/*
