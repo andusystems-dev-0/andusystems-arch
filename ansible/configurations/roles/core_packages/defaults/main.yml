@@ -1,4 +1,5 @@
 aur_packages:
+  - rust
   - networkmanager
   - neovim
   - stow
@@ -6,3 +7,4 @@ aur_packages:
   - neofetch
   - playerctl
   - lm_sensors
+  - tmux

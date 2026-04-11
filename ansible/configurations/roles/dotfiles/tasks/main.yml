@@ -22,6 +22,18 @@
 - name: dotfiles | Stow home package
   ansible.builtin.shell: "stow --dir={{ playbook_dir }}/../../../dotfiles --target={{ ansible_facts['env']['HOME'] }} --restow home"
 
+- name: dotfiles | Ensure local applications directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications"
+    state: directory
+    mode: '0755'
+
+- name: dotfiles | Symlink nvim desktop entry
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/../../../dotfiles/home/.local/share/applications/nvim.desktop"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/nvim.desktop"
+    state: link
+
 - name: dotfiles | Reload systemd user daemon
   ansible.builtin.systemd:
     daemon_reload: true

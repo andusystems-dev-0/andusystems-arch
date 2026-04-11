@@ -1,0 +1,12 @@
+- name: rust_tools | Build media-menu
+  ansible.builtin.command:
+    cmd: cargo build --release
+    chdir: "{{ playbook_dir }}/../../../tools/media-menu"
+  register: cargo_build
+  changed_when: "'Compiling' in cargo_build.stderr"
+
+- name: rust_tools | Install media-menu to ~/.local/bin
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../../../tools/media-menu/target/release/media-menu"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/bin/media-menu"
+    mode: '0755'

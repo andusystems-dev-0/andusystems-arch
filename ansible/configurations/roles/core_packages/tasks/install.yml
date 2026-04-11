@@ -36,20 +36,3 @@
     state: absent
   become: true
 
-- name: install | Check if nvim config exists
-  ansible.builtin.stat:
-    path: "{{ ansible_facts['env']['HOME'] }}/.config/nvim"
-  register: nvim_config
-
-- name: install | Clone LazyVim starter config
-  ansible.builtin.git:
-    repo: https://github.com/LazyVim/starter
-    dest: "{{ ansible_facts['env']['HOME'] }}/.config/nvim"
-  become: false
-  when: not nvim_config.stat.exists
-
-- name: install | Remove LazyVim starter .git directory
-  ansible.builtin.file:
-    path: "{{ ansible_facts['env']['HOME'] }}/.config/nvim/.git"
-    state: absent
-  when: not nvim_config.stat.exists

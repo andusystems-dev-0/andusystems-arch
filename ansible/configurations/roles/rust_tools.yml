@@ -1,0 +1,9 @@
+- name: Build and install Rust tools
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: rust_tools
+      tags:
+        - rust_tools
