@@ -2,47 +2,64 @@
 
 ## Overview
 
-andusystems-arch is an Ansible-driven system configuration tool that provisions an Arch Linux workstation with a Hyprland Wayland compositor, automated wallpaper-driven theming, and managed dotfiles. It runs entirely on localhost — no remote hosts are involved.
+andusystems-arch is an Ansible-driven system configuration tool that provisions an Arch Linux workstation with a Hyprland Wayland compositor, automated wallpaper-driven Material You theming, and managed dotfiles. It runs entirely on localhost — no remote hosts are involved.
+
+The system is organized into three layers: Ansible roles (provisioning), dotfiles (runtime configuration), and scripts + systemd units (ongoing automation).
 
 ## Component Diagram
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
-│                        ansible/configurations/                       │
-│                                                                      │
-│  arch.yml (main playbook)                                            │
-│    │                                                                 │
-│    ├── core_packages ──────► yay (AUR), neovim+LazyVim, stow, etc.  │
-│    ├── desktop_packages ───► wayland stack, browser, audio, fonts    │
-│    ├── dotfiles ───────────► stow symlinks ~/.config ↔ dotfiles/    │
-│    ├── app_cleanup ────────► remove/replace packages, hide launchers│
-│    ├── theming ────────────► wallpaper dirs, scripts, systemd units  │
-│    ├── youtube_tui ────────► yt-dlp + youtube-tui auth config        │
-│    ├── nvidia ─────────────► drivers, DRM modules, initramfs         │
-│    └── workspace_repos ────► clone repos from internal git host      │
-│                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         ansible/configurations/                          │
+│                                                                          │
+│  arch.yml (main playbook — localhost only)                                │
+│    │                                                                     │
+│    ├── core_packages ──────► yay (AUR helper), neovim + LazyVim, stow   │
+│    ├── desktop_packages ───► wayland stack, browser, PipeWire audio,     │
+│    │                         bluetooth, fonts, media tools               │
+│    ├── dotfiles ───────────► stow symlinks: dotfiles/ ↔ ~/.config/      │
+│    ├── app_cleanup ────────► remove unwanted pkgs, hide launcher entries │
+│    ├── theming ────────────► wallpaper dirs, script perms, systemd units │
+│    ├── youtube_tui ────────► yt-dlp + youtube-tui auth configuration    │
+│    ├── nvidia ─────────────► drivers, DRM kernel modules, initramfs     │
+│    └── workspace_repos ────► clone repos from internal git host          │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
 
-┌──────────────────────────────────────────────────────────────────────┐
-│                         dotfiles/home/.config/                       │
-│                                                                      │
-│  hypr/          Hyprland compositor config + matugen color vars       │
-│  kitty/         Terminal emulator (+ matugen color overlay)           │
-│  waybar/        Status bar (+ matugen color overlay)                 │
-│  rofi/          App launcher (+ matugen color overlay)               │
-│  swaync/        Notification daemon (+ matugen color overlay)        │
-│  matugen/       Color template engine config + templates             │
-│  nvim/          Neovim / LazyVim (+ matugen color overlay)           │
-│  btop/          System monitor config                                │
-│  mpv/           Video player config                                  │
-│  flameshot/     Screenshot tool config                               │
-│  youtube-tui/   YouTube TUI browser config                           │
-│  bluetuith/     Bluetooth TUI config                                 │
-│  neofetch/      System info display config                           │
-│  git/           Global git ignore rules                              │
-│  systemd/user/  User-level systemd units (waybar, swaync, timers)    │
-│                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│                          dotfiles/home/.config/                           │
+│                                                                          │
+│  hypr/           Hyprland compositor config + matugen color variables     │
+│  kitty/          Terminal emulator (+ matugen color overlay)              │
+│  waybar/         Status bar config and styling (+ matugen colors)        │
+│  rofi/           Application launcher config and theme (+ matugen)       │
+│  swaync/         Notification daemon config and styling (+ matugen)      │
+│  matugen/        Color template engine config + 8 templates              │
+│  nvim/           Neovim / LazyVim (+ matugen color palette)              │
+│  btop/           System monitor config                                   │
+│  mpv/            Video player config (MPRIS integration)                 │
+│  flameshot/      Screenshot tool config                                  │
+│  youtube-tui/    YouTube TUI browser config                              │
+│  bluetuith/      Bluetooth TUI config                                    │
+│  neofetch/       System info display config                              │
+│  git/            Global git ignore rules                                 │
+│  systemd/user/   User-level systemd units (waybar, swaync, timers)       │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                          ~/.local/bin/ (scripts)                          │
+│                                                                          │
+│  theme-switch.sh      Wallpaper rotation + matugen color generation      │
+│  rofi-launcher.sh     Smart app launcher with auto-close on focus loss   │
+│  nightlight.sh        Time-based display color temperature (wlsunset)    │
+│  screenshot.sh        Region/fullscreen/window screenshot (grim + slurp) │
+│  launch-btop.sh       Scratchpad toggle for btop system monitor          │
+│  launch-nmtui.sh      Scratchpad toggle for network manager TUI          │
+│  launch-bluetuith.sh  Scratchpad toggle for bluetooth TUI                │
+│  yt-recommended       YouTube recommended feed via mpv + yt-dlp          │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Data Flows
@@ -50,32 +67,71 @@ andusystems-arch is an Ansible-driven system configuration tool that provisions 
 ### Playbook Execution Flow
 
 ```
-bootstrap.sh
-  └─► pacman -Syu ansible python git base-devel go
-        └─► ansible-playbook arch.yml -K
-              ├─► core_packages:   clone+build yay → install packages → clone LazyVim
-              ├─► desktop_packages: yay install → enable bluetooth
-              ├─► dotfiles:        find ~/.config/* → adopt unmanaged → stow --restow
-              ├─► app_cleanup:     pacman -Rns → yay -S replacements → hide launchers
-              ├─► theming:         mkdir → chmod scripts → enable systemd units
-              ├─► youtube_tui:     find Zen cookies → write yt-dlp config
-              ├─► nvidia:          enable multilib → pacman install → mkinitcpio -P
-              └─► workspace_repos: git clone (forgejo remote) → git remote add (origin)
+scripts/bootstrap.sh
+  └─► pacman -Syu + install ansible, python, git, base-devel, go
+        └─► ansible-playbook ansible/configurations/arch.yml -K
+              │
+              ├─► core_packages
+              │     Clone + build yay from source
+              │     Install CLI packages via yay (--needed for idempotency)
+              │     Clone LazyVim starter config (if not present)
+              │
+              ├─► desktop_packages
+              │     Install Wayland/desktop packages via yay
+              │     Enable + start bluetooth.service
+              │
+              ├─► dotfiles
+              │     Find unmanaged dirs in ~/.config/
+              │     Filter against dotfiles_exclude list (secrets defense)
+              │     Move unmanaged configs into dotfiles/home/.config/
+              │     stow --restow home (create symlinks)
+              │
+              ├─► app_cleanup
+              │     Remove unwanted packages (htop, dolphin, vim)
+              │     Install replacements (btop)
+              │     Copy .desktop files locally and set NoDisplay=true
+              │
+              ├─► theming
+              │     Create ~/Wallpapers/ and ~/.local/bin/
+              │     Set scripts executable
+              │     Create fallback color configs
+              │     Enable systemd user services and timers
+              │     Override swaync D-Bus activation to use systemd
+              │
+              ├─► youtube_tui
+              │     Detect Zen Browser cookies database
+              │     Generate yt-dlp config with cookie authentication
+              │
+              ├─► nvidia
+              │     Enable multilib repo in pacman.conf
+              │     Install NVIDIA open drivers + utils
+              │     Configure DRM kernel modules (modeset=1, fbdev=1)
+              │     Add NVIDIA modules to initramfs and rebuild
+              │     Enable nvidia-persistenced.service
+              │
+              └─► workspace_repos
+                    Clone repositories from internal git host (forgejo remote)
+                    Add GitHub mirror URL as "origin" remote (where configured)
 ```
 
 ### Theming Pipeline
 
-The color theming system is the most complex data flow in the project. It generates consistent colors across all themed applications from a single wallpaper image.
+The color theming system is the most complex data flow in the project. It generates a consistent Material You color palette across all themed applications from a single wallpaper image.
 
 ```
-~/Wallpapers/*.{jpg,png,webp}
+~/Wallpapers/*.{jpg,jpeg,png,webp}
         │
         ▼
-theme-switch.sh (triggered by systemd timer or manual run)
+theme-switch.sh (triggered by systemd timer every 5 min, or manually)
         │
-        ├─► awww set <wallpaper> --transition wipe
+        ├─► Select random wallpaper (avoids repeating previous)
+        │   Save path to ~/.cache/current-wallpaper
         │
-        ├─► matugen image <wallpaper>
+        ├─► awww img <wallpaper> (animated fade transition, 2s at 60fps)
+        │
+        ├─► matugen image <wallpaper> (Material You color extraction)
+        │     │
+        │     │  Reads: matugen/config.toml (template registry)
         │     │
         │     ├─► templates/hypr-colors.conf    → ~/.config/hypr/colors.conf
         │     ├─► templates/kitty-colors.conf   → ~/.config/kitty/colors.conf
@@ -86,13 +142,14 @@ theme-switch.sh (triggered by systemd timer or manual run)
         │     ├─► templates/gtk4.css            → ~/.config/gtk-4.0/gtk.css
         │     └─► templates/swaync.css          → ~/.config/swaync/style.css
         │
-        └─► reload signals
-              ├─► hyprctl reload
-              ├─► pkill -SIGUSR2 waybar
-              ├─► kitty @ set-colors (via socket)
-              ├─► nvim --remote-send (via socket)
-              └─► swaync reload
+        └─► Hot-reload signals (no logout required)
+              ├─► hyprctl reload              (Hyprland re-reads colors.conf)
+              ├─► pkill -SIGUSR2 waybar       (Waybar reloads styles)
+              ├─► nvim --server <socket>      (Neovim reloads matugen palette)
+              └─► swaync-client -rs           (swaync reloads CSS)
 ```
+
+**Color palette flow:** Wallpaper image → matugen extracts Material You palette (primary, secondary, tertiary, error, background, surface variants) → templates map palette to app-specific config formats → reload signals apply changes live.
 
 ### Dotfiles Sync Flow
 
@@ -100,7 +157,11 @@ theme-switch.sh (triggered by systemd timer or manual run)
 ~/.config/<app>/  (live config on disk)
         │
         ▼
-dotfiles role: find unmanaged dirs → filter against dotfiles_exclude list
+dotfiles role: find unmanaged dirs
+        │
+        ▼
+Filter against dotfiles_exclude list
+(browser profiles, cloud creds, IDE sessions, shell history — never adopted)
         │
         ▼
 mv to dotfiles/home/.config/<app>/
@@ -109,65 +170,84 @@ mv to dotfiles/home/.config/<app>/
 stow --restow home  →  symlinks dotfiles/home/.config/* → ~/.config/*
 ```
 
+After stow runs, editing a file under `~/.config/` modifies the repo copy directly via the symlink — no manual sync step needed.
+
 ### Workspace Repos Flow
 
 ```
-Internal Git host (forgejo remote — source of truth)
+Internal git host (forgejo remote — source of truth)
         │
         ▼
 git clone → ~/andusystems/<repo-name>/
         │
         ▼
-git remote add origin <github-mirror-url>  (if configured)
+git remote add origin <github-mirror-url>  (if configured for that repo)
 ```
 
 ## Key Design Decisions
 
-### Stow for Dotfile Management
+### GNU Stow for Dotfile Management
 
 GNU Stow creates symlinks from `dotfiles/home/.config/*` to `~/.config/*`. This means:
+
 - The repo is the single source of truth for all tracked configs
-- Changes to configs on disk are automatically reflected in the repo
+- Changes to configs on disk are automatically reflected in the repo (via symlink)
 - No copy/sync step needed after editing a config
+- `stow --restow` is safe to run repeatedly (idempotent re-linking)
 
 ### Defense-in-Depth for Secrets
 
 Two independent mechanisms prevent secrets from being committed:
 
-1. **`dotfiles_exclude` list** (`ansible/configurations/roles/dotfiles/defaults/main.yml`) — the primary defense. Prevents the dotfiles role from ever adopting sensitive directories into the repo.
-2. **`.gitignore`** — the safety net. Blocks git from tracking any sensitive path that might get adopted accidentally.
+1. **`dotfiles_exclude` list** (`ansible/configurations/roles/dotfiles/defaults/main.yml`) — the primary defense. Prevents the dotfiles role from ever adopting sensitive directories into the repo. Covers browser profiles, cloud CLI credentials (helm, kubectl, gcloud, azure), IDE sessions, chat clients, and shell history.
 
-Both lists must be kept in sync.
+2. **`.gitignore`** — the safety net. Blocks git from tracking any sensitive path that might get adopted accidentally. Also covers generated files (matugen outputs, wallpapers, Python bytecode).
+
+Both lists must be kept in sync. If a new sensitive directory appears in `~/.config/`, it must be added to both.
 
 ### Temporary Sudo Escalation for Package Installs
 
 The yay AUR helper requires passwordless pacman access during installation. Each role that installs packages follows the same pattern:
+
 1. Write a sudoers drop-in file granting passwordless pacman
-2. Run yay/pacman install
+2. Run yay/pacman install commands
 3. Immediately revoke the sudoers file
 
 This avoids leaving permanent passwordless access on the system.
 
 ### Systemd User Units for Runtime Services
 
-Several services run as systemd user units rather than being launched directly by Hyprland:
-- `waybar.service` — started by `graphical-session.target`
-- `swaync.service` — started by `graphical-session.target`
-- `theme-switch.timer` — periodic wallpaper rotation
-- `nightlight.timer` — periodic nightlight color temperature
+Desktop services run as systemd user units rather than being launched directly by Hyprland:
 
-D-Bus activation for swaync is overridden to delegate to systemd, preventing duplicate instances.
+| Unit | Why systemd? |
+|------|-------------|
+| `waybar.service` | Auto-restart on crash (Restart=always, RestartSec=1) |
+| `swaync.service` | D-Bus activation delegation prevents duplicate instances |
+| `theme-switch.timer` | Reliable periodic execution with persistent state |
+| `nightlight.timer` | Calendar-based triggers (07:00 and 21:00) with catch-up |
+
+D-Bus activation for swaync is overridden with a custom service file in `~/.local/share/dbus-1/services/` to delegate activation to systemd, preventing race conditions with duplicate instances.
 
 ### Local-Only Ansible
 
 All playbooks target `localhost` with `gather_facts: true`. There is no inventory file for remote hosts. This is a single-machine provisioning tool, not a fleet management system.
 
+### Hyprland Window Management
+
+The compositor uses a combination of:
+
+- **Persistent windows**: Autostarted via `exec-once` with workspace dispatch rules
+- **Special workspaces**: Scratchpad-style toggles for btop, nmtui, and bluetuith
+- **Window rules**: Float/tile, opacity, size, and position per window class
+- **Animations**: Custom bezier curves (easeOutQuint, easeOutExpo, spring) for smooth transitions
+
 ## Invariants
 
 - **No secrets in the repo**: The `dotfiles_exclude` list and `.gitignore` must always cover all directories containing tokens, credentials, session state, or browser profiles.
-- **Idempotent playbook runs**: Every role must be safe to re-run. Package installs use `--needed`, directory creation uses `state: directory`, and conditional checks gate one-time operations (e.g., LazyVim clone).
+- **Idempotent playbook runs**: Every role must be safe to re-run. Package installs use `--needed`, directory creation uses `state: directory`, and conditional checks gate one-time operations (e.g., LazyVim clone only if not present).
 - **Stow owns ~/.config symlinks**: After the dotfiles role runs, every tracked config under `~/.config/` is a symlink into the repo. Direct file edits under `~/.config/` modify the repo copy via the symlink.
-- **Generated color files are gitignored**: All matugen output files (colors.conf, colors.css, colors.rasi, matugen.lua, style.css for swaync) are excluded from git tracking because they change on every wallpaper rotation.
+- **Generated color files are gitignored**: All matugen output files (`colors.conf`, `colors.css`, `colors.rasi`, `matugen.lua`, `style.css` for swaync, GTK CSS) are excluded from git tracking because they change on every wallpaper rotation.
+- **Sudo escalation is temporary**: No role may leave a passwordless sudoers drop-in after completion.
 
 ## Concurrency Model
 
@@ -176,4 +256,4 @@ There is no concurrency concern in normal operation — Ansible runs tasks seque
 - The `theme-switch.timer` writing matugen color files
 - A manual `theme-switch.sh` invocation at the same time
 
-This is benign because matugen writes atomically and all reloads are idempotent signal-based (SIGUSR2, socket commands).
+This is benign because matugen writes files atomically and all reloads are idempotent signal-based operations (SIGUSR2, hyprctl reload, socket commands). A concurrent run may trigger a redundant reload, but the result is always consistent.

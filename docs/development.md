@@ -29,6 +29,8 @@ sudo bash scripts/bootstrap.sh
 ansible-playbook ansible/configurations/arch.yml -K
 ```
 
+The bootstrap script runs `pacman -Syu` and installs: `ansible`, `python`, `python-pip`, `git`, `base-devel`, and `go`.
+
 ## Common Development Tasks
 
 ### Adding a New Package
@@ -56,17 +58,18 @@ ansible-playbook ansible/configurations/arch.yml -K
 
 ### Excluding a Config from Tracking
 
-Add the directory name to both:
+Sensitive directories must be excluded from both the Ansible adoption step and git tracking. Add the directory name to both:
+
 - `ansible/configurations/roles/dotfiles/defaults/main.yml` → `dotfiles_exclude` list
 - `.gitignore` → under the appropriate section
 
 ### Adding a New Matugen-Themed App
 
-1. Create a color template: `dotfiles/home/.config/matugen/templates/<app>.<ext>`
-2. Register it in `dotfiles/home/.config/matugen/config.toml`
-3. Add a reload command in the `theme-switch.sh` script
+1. Create a color template in `dotfiles/home/.config/matugen/templates/<app>.<ext>` using matugen's template variable syntax (e.g., `{{colors.primary.default.hex}}`).
+2. Register the template in `dotfiles/home/.config/matugen/config.toml` with input path and output path.
+3. Add a reload command in the `theme-switch.sh` script so the app picks up new colors without restart.
 
-See [docs/customization.md](customization.md#adding-an-app-to-the-matugen-theming-pipeline) for details.
+See [docs/customization.md](customization.md) for detailed examples.
 
 ### Adding a New Ansible Role
 
@@ -97,7 +100,21 @@ See [docs/customization.md](customization.md#adding-an-app-to-the-matugen-themin
    - import_playbook: ./roles/<role_name>.yml
    ```
 
-4. Use `include_tasks` (not `import_tasks`) in `tasks/main.yml` when applying tags — see [docs/troubleshooting.md](troubleshooting.md#ansible-import_tasks-silently-skips-tagged-tasks).
+4. **Important:** Use `include_tasks` (not `import_tasks`) in `tasks/main.yml` when applying tags. `import_tasks` causes Ansible to silently skip tagged tasks — see [docs/troubleshooting.md](troubleshooting.md).
+
+### Adding a New Script
+
+1. Place the script in `dotfiles/home/.local/bin/<script-name>.sh`.
+2. Add a `chmod +x` task in the theming role's `setup.yml` (or the appropriate role).
+3. If it needs periodic execution, create a systemd timer + oneshot service pair in `dotfiles/home/.config/systemd/user/`.
+
+### Modifying the Package Removal/Cleanup List
+
+Edit `ansible/configurations/roles/app_cleanup/defaults/main.yml`:
+
+- `packages_to_remove` — packages removed via `pacman -Rns`
+- `packages_to_install` — replacement packages installed via yay
+- `launchers_to_hide` — `.desktop` files that get `NoDisplay=true` set locally
 
 ## Testing
 
@@ -119,13 +136,28 @@ ansible-playbook ansible/configurations/arch.yml --tags <tag> -K
 ansible-playbook ansible/configurations/arch.yml --check -K
 ```
 
-Note: Check mode will fail on shell tasks (yay installs, makepkg) since they cannot simulate execution. Use it primarily to verify file/directory operations and template rendering.
+**Note:** Check mode will fail on shell tasks (yay installs, makepkg) since they cannot simulate execution. Use it primarily to verify file/directory operations and template rendering.
 
 ### Stow Dry Run
 
 Preview what stow would do without making changes:
+
 ```bash
 stow --dir=dotfiles --target=$HOME --restow --simulate home
+```
+
+### Testing Theming
+
+Manually trigger a wallpaper rotation and color regeneration:
+
+```bash
+~/.local/bin/theme-switch.sh
+```
+
+Or trigger via systemd:
+
+```bash
+systemctl --user start theme-switch.service
 ```
 
 ## Available Ansible Tags
@@ -158,7 +190,7 @@ andusystems-arch/
 │       │       ├── main.yml              # Entry point
 │       │       └── install.yml           # yay build + package install + LazyVim
 │       ├── desktop_packages/
-│       │   ├── defaults/main.yml         # Package list
+│       │   ├── defaults/main.yml         # Package list (37 packages)
 │       │   └── tasks/
 │       │       ├── main.yml
 │       │       └── install.yml           # Package install + bluetooth enable
@@ -188,14 +220,37 @@ andusystems-arch/
 │       └── workspace_repos/
 │           ├── defaults/main.yml         # Repo list (names + URLs)
 │           └── tasks/main.yml            # Clone + remote setup
-├── dotfiles/home/.config/                # Managed dotfiles
-├── scripts/bootstrap.sh                  # Initial system bootstrap
+├── dotfiles/
+│   └── home/.config/                     # Managed dotfiles (stow package)
+│       ├── hypr/                         # Hyprland compositor
+│       ├── kitty/                        # Terminal emulator
+│       ├── waybar/                       # Status bar
+│       ├── rofi/                         # App launcher
+│       ├── swaync/                       # Notification center
+│       ├── matugen/                      # Color template engine
+│       ├── btop/                         # System monitor
+│       ├── mpv/                          # Media player
+│       ├── youtube-tui/                  # YouTube TUI
+│       ├── bluetuith/                    # Bluetooth TUI
+│       ├── neofetch/                     # System info
+│       ├── flameshot/                    # Screenshot tool
+│       ├── git/                          # Global gitignore
+│       └── systemd/user/                 # Systemd user units + timers
+├── scripts/
+│   └── bootstrap.sh                      # Initial system bootstrap
 └── docs/                                 # Documentation
+    ├── architecture.md
+    ├── development.md (this file)
+    ├── packages.md
+    ├── keybinds.md
+    ├── customization.md
+    └── troubleshooting.md
 ```
 
 ## Environment Variables
 
 No environment variables are required. All configuration is driven by:
+
 - Ansible defaults in `roles/*/defaults/main.yml`
 - Dotfiles in `dotfiles/home/.config/`
 - The `-K` flag prompts for the sudo password at runtime
@@ -207,3 +262,5 @@ No environment variables are required. All configuration is driven by:
 - **Temporary sudo escalation** — sudoers drop-in is created before package installs and revoked immediately after
 - **`yay --needed`** — packages are only installed if not already present (idempotent)
 - **Stow `--restow`** — re-symlinks everything, safe to run repeatedly
+- **`changed_when: false`** — used on informational shell commands that don't modify system state
+- **Generated files are gitignored** — all matugen color outputs are excluded from version control since they change on every wallpaper rotation
