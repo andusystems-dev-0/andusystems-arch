@@ -2,4 +2,4 @@
 # Crate must live at tools/<name> and produce a binary named <name>.
 rust_tools_binaries:
   - name: launcher
-  # - name: dock  # TODO: enable once tools/dock has real source code
+  - name: dock
