@@ -33,15 +33,6 @@ dotfiles/home/.config/pangolin/
 # Cursor IDE — contains cookies, trust tokens, machine ID, session data, and caches
 dotfiles/home/.config/Cursor/
 dotfiles/home/.config/cursor/
-dotfiles/home/.config/hypr/colors.conf
-dotfiles/home/.config/hypr/colors.conf
-dotfiles/home/.config/kitty/colors.conf
-dotfiles/home/.config/nvim/lua/colors/matugen.lua
-dotfiles/home/.config/rofi/colors.rasi
-dotfiles/home/.config/waybar/colors.css
-dotfiles/home/.config/swaync/style.css
+
+# Wallpapers
 dotfiles/home/Wallpapers/*
-dotfiles/home/.config/rofi/colors.rasi
-dotfiles/home/.config/nvim/lua/colors/matugen.lua
-dotfiles/home/.config/kitty/colors.conf
-dotfiles/home/.config/hypr/colors.conf
