@@ -19,6 +19,22 @@
     - not item.islnk
     - item.path | basename not in dotfiles_exclude
 
+- name: dotfiles | Find dangling symlinks under .config
+  ansible.builtin.shell: |
+    set -o pipefail
+    find "{{ ansible_facts['env']['HOME'] }}/.config" -maxdepth 1 -type l ! -exec test -e {} \; -print
+  args:
+    executable: /bin/bash
+  register: dangling_config_links
+  changed_when: false
+
+- name: dotfiles | Prune dangling symlinks under .config
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ dangling_config_links.stdout_lines }}"
+  when: item | basename not in dotfiles_exclude
+
 - name: dotfiles | Stow home package
   ansible.builtin.shell: "stow --dir={{ playbook_dir }}/../../../dotfiles --target={{ ansible_facts['env']['HOME'] }} --restow home"
 
