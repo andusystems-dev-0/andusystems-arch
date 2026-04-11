@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Removed youtube-tui and all associated components: Ansible role (`youtube_tui`), config directory (`dotfiles/home/.config/youtube-tui/`), `yt-recommended` script, Hyprland windowrules (`kitty-ws1-youtube`, `yt-recommended`), and the `youtube-tui` + `yt-dlp` packages from `desktop_packages`.
 - Removed `mpv` from `desktop_packages` and deleted `dotfiles/home/.config/mpv/`. Waybar's MPRIS module remains functional for other players (e.g. browsers).
 - Removed Cursor and Obsidian: dropped leftover `dotfiles/home/.config/{cursor,Cursor,obsidian}/` directories, removed `Cursor`/`cursor` from `dotfiles_exclude`, removed `cursor` + `obsidian` paths from `.gitignore`, and removed the `cursor-bin` row from `docs/packages.md`.
-- Removed all screenshot utilities: deleted `dotfiles/home/.config/flameshot/`, `dotfiles/home/.local/bin/screenshot.sh`, all `Print` keybinds from `hyprland.conf`, the `screenshot.sh` chmod task from the theming role, and the `flameshot` entry from `docs/packages.md`. (`flameshot`, `grim`, `slurp` were never in Ansible package lists.)
+- Removed all screenshot utilities: deleted `dotfiles/home/.config/flameshot/`, `dotfiles/home/.local/share/applications/org.flameshot.Flameshot.desktop`, `dotfiles/home/.local/bin/screenshot.sh`, all `Print` keybinds from `hyprland.conf`, the `screenshot.sh` chmod task from the theming role, and the `flameshot` entry from `docs/packages.md`. (`flameshot`, `grim`, `slurp` were never in Ansible package lists.)
 
 ## [2026-04-10]
 
