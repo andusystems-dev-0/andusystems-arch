@@ -39,6 +39,11 @@ dotfiles/home/.config/nvim/lua/colors/matugen.lua
 dotfiles/home/.config/yt-dlp/
 
 # -----------------------------------------------------------------------------
+# Knowledge-base / note-taking apps (caches, cookies, session tokens)
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/obsidian/
+
+# -----------------------------------------------------------------------------
 # System / desktop runtime state — not needed for rebuild
 # -----------------------------------------------------------------------------
 dotfiles/home/.config/zen/

@@ -21,3 +21,14 @@
 
 - name: dotfiles | Stow home package
   ansible.builtin.shell: "stow --dir={{ playbook_dir }}/../../../dotfiles --target={{ ansible_facts['env']['HOME'] }} --restow home"
+
+- name: dotfiles | Reload systemd user daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+    scope: user
+
+- name: dotfiles | Enable waybar user service
+  ansible.builtin.systemd:
+    name: waybar.service
+    enabled: true
+    scope: user

@@ -18,6 +18,11 @@
   ansible.builtin.command: pacman -Sy
   become: true
 
+- name: install | Remove conflicting nvidia-open package if present
+  ansible.builtin.command: pacman -R --noconfirm nvidia-open
+  become: true
+  failed_when: false
+
 - name: install | Install NVIDIA packages via pacman
   ansible.builtin.command: pacman -S --noconfirm --needed {{ nvidia_packages | join(' ') }}
   become: true

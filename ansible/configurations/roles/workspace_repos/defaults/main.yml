@@ -38,7 +38,3 @@ workspace_repos:
   - name: Portfolio
     forgejo_url: https://forgejo.andusystems.com/andusystems/Portfolio.git
 
-  # Obsidian vault lives one level deeper and uses a different forgejo org.
-  - name: andusystems-obsidian
-    dest: Obsidian/andusystems-obsidian
-    forgejo_url: https://forgejo.andusystems.com/forgejo_admin/andusystems-obsidian.git
