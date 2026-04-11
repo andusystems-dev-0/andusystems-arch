@@ -22,9 +22,6 @@ aur_packages:
   - hypridle
   - brightnessctl
   - wl-clipboard
-  - youtube-tui
-  - yt-dlp
-  - mpv
   - ttf-liberation
   - inter-font
   - noto-fonts

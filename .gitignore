@@ -31,17 +31,6 @@ dotfiles/home/.config/hypr/colors.conf
 dotfiles/home/.config/kitty/colors.conf
 dotfiles/home/.config/rofi/colors.rasi
 dotfiles/home/.config/waybar/colors.css
-dotfiles/home/.config/nvim/lua/colors/matugen.lua
-
-# -----------------------------------------------------------------------------
-# Ansible-generated configs (not stowed — contain dynamic runtime values)
-# -----------------------------------------------------------------------------
-dotfiles/home/.config/yt-dlp/
-
-# -----------------------------------------------------------------------------
-# Knowledge-base / note-taking apps (caches, cookies, session tokens)
-# -----------------------------------------------------------------------------
-dotfiles/home/.config/obsidian/
 
 # -----------------------------------------------------------------------------
 # System / desktop runtime state — not needed for rebuild
@@ -80,8 +69,6 @@ dotfiles/home/.config/azure/
 # -----------------------------------------------------------------------------
 # IDE / editor session data and tokens
 # -----------------------------------------------------------------------------
-dotfiles/home/.config/Cursor/
-dotfiles/home/.config/cursor/
 dotfiles/home/.config/Code/
 dotfiles/home/.config/Code - OSS/
 dotfiles/home/.config/VSCodium/

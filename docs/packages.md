@@ -28,7 +28,6 @@ All packages are installed via `yay` (AUR helper). Packages in the official Arch
 |---|---|
 | `zen-browser-bin` | Primary web browser (Firefox-based) |
 | `[AI_ASSISTANT]-code-stable` | AI coding assistant |
-| `cursor-bin` | AI code editor |
 
 ### Wayland Compositor & Bar
 
@@ -47,7 +46,6 @@ All packages are installed via `yay` (AUR helper). Packages in the official Arch
 | `wlsunset` | Nightlight / color temperature (time-aware) |
 | `brightnessctl` | Screen brightness control |
 | `wl-clipboard` | Wayland clipboard tools (`wl-copy`, `wl-paste`) |
-| `flameshot` | Screenshot tool |
 | `power-profiles-daemon` | Power management profiles (balanced / performance / saver) |
 
 ### Audio (PipeWire stack)
@@ -73,15 +71,6 @@ All packages are installed via `yay` (AUR helper). Packages in the official Arch
 | Package | Purpose |
 |---|---|
 | `swaync` | Notification daemon with notification center |
-
-### Media
-
-| Package | Purpose |
-|---|---|
-| `mpv` | Video player |
-| `mpv-mpris` | MPRIS plugin for mpv (enables Waybar MPRIS module) |
-| `yt-dlp` | YouTube/video downloader (used by youtube-tui and yt-recommended) |
-| `youtube-tui` | TUI YouTube browser (workspace 1 persistent window) |
 
 ### Python / Panel Dependencies
 
@@ -146,7 +135,6 @@ These packages remain installed but are hidden from Rofi and XDG app launchers v
 - `qv4l2.desktop`, `qvidcap.desktop` — V4L2 utilities
 - `uuctl.desktop` — UU control utility
 - `xgps.desktop`, `xgpsspeed.desktop` — GPS utilities
-- `mpv.desktop` — mpv file-open GUI entry (launched via scripts only)
 
 ---
 

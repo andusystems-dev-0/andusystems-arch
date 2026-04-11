@@ -43,7 +43,6 @@
 
 | Key | Action |
 |---|---|
-| `Print` | Screenshot (flameshot GUI) |
 | `XF86AudioRaiseVolume` | Volume +5% |
 | `XF86AudioLowerVolume` | Volume −5% |
 | `XF86AudioMute` | Toggle mute |
@@ -75,39 +74,3 @@
 | `<leader>gf` | File git log |
 
 The two bottom terminal splits open automatically on `VimEnter` when cwd is `~/andusystems-arch` and no file argument is passed. Left split runs [AI_ASSISTANT] Code, right split is a plain shell.
-
----
-
-## youtube-tui
-
-### Global bindings (all pages)
-
-| Input | Action |
-|---|---|
-| `R` | Launch yt-recommended (mpv recommended feed) |
-| `y` | Copy current video URL to clipboard |
-| `Space` | Toggle mpv pause |
-| `Left` (mode 3, mpv focused) | Skip to previous in mpv playlist |
-| `Right` (mode 3, mpv focused) | Skip to next in mpv playlist |
-| `Left` (mode 2, seek) | Rewind mpv 5 seconds |
-| `Right` (mode 2, seek) | Fast-forward mpv 5 seconds |
-
-### Custom commands (`:` prompt)
-
-| Command | Action |
-|---|---|
-| `:r` | Launch yt-recommended (same as `R`) |
-| `:rl` | Reload youtube-tui |
-
-### Per-page bindings (mode 2 = hover, mode 1 = all items)
-
-| Page | Key | Action |
-|---|---|---|
-| search / popular / trending / playlist / channel | `p` (mode 2) | Play hovered video in mpv |
-| search / popular / trending / playlist / channel | `a` (mode 2) | Play hovered video audio-only in mpv |
-| search / popular / trending / playlist / channel | `A` (mode 1) | Shuffle-play all as audio playlist |
-| feed | `p` (mode 2) | Play hovered video in mpv |
-| feed | `a` (mode 2) | Play hovered video audio-only |
-| feed | `A` (mode 1) | Shuffle-play channel videos as audio playlist |
-| feed | `P` (mode 1) | Same as `A` |
-| any page with URL | `f` (mode 2) | Open hovered URL in Zen Browser |

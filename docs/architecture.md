@@ -20,7 +20,6 @@ The system is organized into three layers: Ansible roles (provisioning), dotfile
 │    ├── dotfiles ───────────► stow symlinks: dotfiles/ ↔ ~/.config/      │
 │    ├── app_cleanup ────────► remove unwanted pkgs, hide launcher entries │
 │    ├── theming ────────────► wallpaper dirs, script perms, systemd units │
-│    ├── youtube_tui ────────► yt-dlp + youtube-tui auth configuration    │
 │    ├── nvidia ─────────────► drivers, DRM kernel modules, initramfs     │
 │    └── workspace_repos ────► clone repos from internal git host          │
 │                                                                          │
@@ -37,9 +36,6 @@ The system is organized into three layers: Ansible roles (provisioning), dotfile
 │  matugen/        Color template engine config + 8 templates              │
 │  nvim/           Neovim / LazyVim (+ matugen color palette)              │
 │  btop/           System monitor config                                   │
-│  mpv/            Video player config (MPRIS integration)                 │
-│  flameshot/      Screenshot tool config                                  │
-│  youtube-tui/    YouTube TUI browser config                              │
 │  bluetuith/      Bluetooth TUI config                                    │
 │  neofetch/       System info display config                              │
 │  git/            Global git ignore rules                                 │
@@ -53,11 +49,9 @@ The system is organized into three layers: Ansible roles (provisioning), dotfile
 │  theme-switch.sh      Wallpaper rotation + matugen color generation      │
 │  rofi-launcher.sh     Smart app launcher with auto-close on focus loss   │
 │  nightlight.sh        Time-based display color temperature (wlsunset)    │
-│  screenshot.sh        Region/fullscreen/window screenshot (grim + slurp) │
 │  launch-btop.sh       Scratchpad toggle for btop system monitor          │
 │  launch-nmtui.sh      Scratchpad toggle for network manager TUI          │
 │  launch-bluetuith.sh  Scratchpad toggle for bluetooth TUI                │
-│  yt-recommended       YouTube recommended feed via mpv + yt-dlp          │
 │                                                                          │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
@@ -97,10 +91,6 @@ scripts/bootstrap.sh
               │     Create fallback color configs
               │     Enable systemd user services and timers
               │     Override swaync D-Bus activation to use systemd
-              │
-              ├─► youtube_tui
-              │     Detect Zen Browser cookies database
-              │     Generate yt-dlp config with cookie authentication
               │
               ├─► nvidia
               │     Enable multilib repo in pacman.conf

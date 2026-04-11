@@ -24,7 +24,6 @@ dotfiles_exclude:
   - borg
   - sops
   - age
-  - yt-dlp
 
   # Cluster / cloud CLI credentials
   - argocd
@@ -35,8 +34,6 @@ dotfiles_exclude:
   - azure
 
   # IDE / editor session data and tokens
-  - Cursor
-  - cursor
   - Code
   - Code - OSS
   - VSCodium

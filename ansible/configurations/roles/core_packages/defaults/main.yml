@@ -8,3 +8,6 @@ aur_packages:
   - playerctl
   - lm_sensors
   - tmux
+  - tree-sitter
+  - tree-sitter-cli
+  - gcc

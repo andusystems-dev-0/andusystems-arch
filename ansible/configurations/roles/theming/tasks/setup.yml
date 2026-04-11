@@ -48,12 +48,6 @@
     mode: '0755'
   become: false
 
-- name: theming | Make screenshot script executable
-  ansible.builtin.file:
-    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/screenshot.sh"
-    mode: '0755'
-  become: false
-
 - name: theming | Create gtk-3.0 config directory
   ansible.builtin.file:
     path: "{{ ansible_facts['env']['HOME'] }}/.config/gtk-3.0"

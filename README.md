@@ -48,7 +48,6 @@ Each role has its own tag for selective execution:
 | `dotfiles` | Adopt unmanaged configs and stow all dotfiles |
 | `app_cleanup` | Remove unwanted packages, install replacements, hide launcher entries |
 | `theming` | Wallpaper directory, script permissions, systemd services, matugen colors |
-| `youtube_tui` | youtube-tui + yt-dlp configuration and authentication setup |
 | `nvidia` | NVIDIA open drivers, DRM kernel modules, initramfs rebuild |
 | `workspace_repos` | Clone all workspace repos from the internal Git host |
 
@@ -70,7 +69,6 @@ andusystems-arch/
 │       ├── dotfiles/            # Stow-based config management
 │       ├── app_cleanup/         # Package removal + launcher hiding
 │       ├── theming/             # Wallpaper/color pipeline + systemd units
-│       ├── youtube_tui/         # youtube-tui + yt-dlp auth setup
 │       ├── nvidia/              # NVIDIA driver + kernel module config
 │       └── workspace_repos/     # Git repo cloning from internal host
 ├── dotfiles/home/.config/       # All managed dotfiles (symlinked via stow)
@@ -94,7 +92,7 @@ The system uses wallpaper-driven color generation via [matugen](https://github.c
 
 On login, Hyprland autostarts persistent windows across two workspaces:
 
-- **Workspace 1**: youtube-tui (bottom-left), [AI_ASSISTANT] Code terminal (top-right), shell (bottom-right)
+- **Workspace 1**: [AI_ASSISTANT] Code terminal (top-right), shell (bottom-right)
 - **Workspace 2**: Full-screen Neovim (LazyVim)
 
 Scratchpad-style special workspaces provide quick access to btop, nmtui, and bluetuith.

@@ -173,7 +173,6 @@ systemctl --user start theme-switch.service
 | `hide_launchers` | app_cleanup | Hide desktop launcher entries only |
 | `theming` | theming | Full theming setup |
 | `setup` | theming | Theming setup tasks |
-| `youtube_tui` | youtube_tui | youtube-tui + yt-dlp config |
 | `nvidia` | nvidia | Full NVIDIA driver setup |
 | `workspace_repos` | workspace_repos | Clone workspace repositories |
 
@@ -208,10 +207,6 @@ andusystems-arch/
 │       │   └── tasks/
 │       │       ├── main.yml
 │       │       └── setup.yml             # Dirs, script perms, systemd units
-│       ├── youtube_tui/
-│       │   └── tasks/
-│       │       ├── main.yml
-│       │       └── setup.yml             # Cookie detection + yt-dlp config
 │       ├── nvidia/
 │       │   ├── defaults/main.yml         # NVIDIA package list
 │       │   └── tasks/
@@ -229,11 +224,8 @@ andusystems-arch/
 │       ├── swaync/                       # Notification center
 │       ├── matugen/                      # Color template engine
 │       ├── btop/                         # System monitor
-│       ├── mpv/                          # Media player
-│       ├── youtube-tui/                  # YouTube TUI
 │       ├── bluetuith/                    # Bluetooth TUI
 │       ├── neofetch/                     # System info
-│       ├── flameshot/                    # Screenshot tool
 │       ├── git/                          # Global gitignore
 │       └── systemd/user/                 # Systemd user units + timers
 ├── scripts/
