@@ -53,10 +53,13 @@ pkill -SIGUSR2 waybar 2>/dev/null || true
 # Reload hyprland to pick up new colors.conf
 hyprctl reload 2>/dev/null || true
 
-# Hot-reload running Neovim instances
+# Hot-reload running Neovim instances.
+# Use --remote-expr (not --remote-send) so the command runs regardless of the
+# current mode. --remote-send simulates keystrokes, which gets pasted as literal
+# text when nvim is in insert/terminal/command-line mode.
 for socket in "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"/nvim.*; do
     [[ -S "$socket" ]] || continue
-    nvim --server "$socket" --remote-send \
-        ':lua package.loaded["colors.matugen"]=nil; require("mini.base16").setup({palette=require("colors.matugen")})<CR>' \
-        2>/dev/null || true
+    nvim --server "$socket" --remote-expr \
+        'execute("lua package.loaded[\"colors.matugen\"] = nil; require(\"mini.base16\").setup({ palette = require(\"colors.matugen\") })")' \
+        >/dev/null 2>&1 || true
 done
