@@ -1,3 +1,9 @@
+- name: rust_tools | Ensure rustup default toolchain is set
+  ansible.builtin.command:
+    cmd: rustup default stable
+  register: rustup_default
+  changed_when: "'installed' in rustup_default.stdout"
+
 - name: rust_tools | Build crate (release)
   ansible.builtin.command:
     cmd: cargo build --release
