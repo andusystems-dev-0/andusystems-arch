@@ -1,5 +1,5 @@
 aur_packages:
-  - rust
+  - rustup
   - networkmanager
   - neovim
   - stow
@@ -11,3 +11,5 @@ aur_packages:
   - tree-sitter
   - tree-sitter-cli
   - gcc
+  - nodejs
+  - npm

@@ -24,12 +24,6 @@
     mode: '0755'
   become: false
 
-- name: theming | Make nightlight script executable
-  ansible.builtin.file:
-    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/nightlight.sh"
-    mode: '0755'
-  become: false
-
 - name: theming | Make launch-btop script executable
   ansible.builtin.file:
     path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/launch-btop.sh"
@@ -146,10 +140,3 @@
     scope: user
   become: false
 
-- name: theming | Enable and start nightlight timer
-  ansible.builtin.systemd:
-    name: nightlight.timer
-    enabled: true
-    state: started
-    scope: user
-  become: false

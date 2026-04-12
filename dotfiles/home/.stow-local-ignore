@@ -1,0 +1,6 @@
+# These .desktop files are symlinked explicitly by the dotfiles ansible role
+# (the parent directory is shared with system-installed .desktop files, so it
+# can't be folded by stow). Keep stow from touching them to avoid conflicts
+# between stow's relative symlinks and ansible's absolute ones.
+^/\.local/share/applications/nvim\.desktop$
+^/\.local/share/applications/nvidia-settings\.desktop$
