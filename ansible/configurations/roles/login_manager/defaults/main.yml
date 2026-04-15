@@ -1,0 +1,19 @@
+---
+login_manager_packages:
+  - greetd
+  - greetd-tuigreet
+
+# Display managers to remove if found
+unwanted_display_managers:
+  - gdm
+  - sddm
+  - lightdm
+  - ly
+
+greetd_config: |
+  [terminal]
+  vt = 1
+
+  [default_session]
+  command = "tuigreet --time --remember --remember-session --sessions /usr/share/wayland-sessions"
+  user = "greeter"

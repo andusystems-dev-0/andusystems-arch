@@ -1,0 +1,10 @@
+- name: Configure login manager
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: login_manager
+      tags:
+        - login_manager
+        - install

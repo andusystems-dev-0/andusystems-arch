@@ -1,0 +1,9 @@
+- name: main | Install login manager
+  import_tasks: install.yml
+  tags:
+    - install
+
+- name: main | Remove unwanted display managers
+  import_tasks: cleanup.yml
+  tags:
+    - install

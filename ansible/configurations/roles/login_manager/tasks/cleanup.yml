@@ -1,0 +1,22 @@
+- name: cleanup | Check for unwanted display managers
+  ansible.builtin.command: pacman -Qq {{ item }}
+  loop: "{{ unwanted_display_managers }}"
+  register: dm_check
+  failed_when: false
+  changed_when: false
+
+- name: cleanup | Disable unwanted display manager services
+  ansible.builtin.systemd:
+    name: "{{ item.item }}.service"
+    enabled: false
+    daemon_reload: true
+  become: true
+  loop: "{{ dm_check.results }}"
+  when: item.rc == 0
+  failed_when: false
+
+- name: cleanup | Remove unwanted display managers
+  ansible.builtin.command: pacman -Rns --noconfirm {{ item.item }}
+  become: true
+  loop: "{{ dm_check.results }}"
+  when: item.rc == 0
