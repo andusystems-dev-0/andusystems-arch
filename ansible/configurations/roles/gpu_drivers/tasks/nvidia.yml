@@ -1,0 +1,66 @@
+- name: nvidia | Enable multilib repository
+  ansible.builtin.blockinfile:
+    path: /etc/pacman.conf
+    marker: "# {mark} ANSIBLE MANAGED MULTILIB"
+    block: |
+      [multilib]
+      Include = /etc/pacman.d/mirrorlist
+  become: true
+
+- name: nvidia | Allow pacman without password for yay
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/pacman-nopasswd
+    content: "admin ALL=(ALL) NOPASSWD: /usr/bin/pacman\n"
+    validate: visudo -cf %s
+  become: true
+
+- name: nvidia | Full system upgrade
+  ansible.builtin.command: pacman -Syu --noconfirm
+  become: true
+
+- name: nvidia | Remove conflicting nvidia-open package if present
+  ansible.builtin.command: pacman -R --noconfirm nvidia-open
+  become: true
+  failed_when: false
+
+- name: nvidia | Install NVIDIA packages via pacman
+  ansible.builtin.command: pacman -S --noconfirm --needed {{ nvidia_packages | join(' ') }}
+  become: true
+
+- name: nvidia | Revoke passwordless pacman after install
+  ansible.builtin.file:
+    path: /etc/sudoers.d/pacman-nopasswd
+    state: absent
+  become: true
+
+- name: nvidia | Configure NVIDIA DRM kernel module options
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/nvidia.conf
+    content: "options nvidia-drm modeset=1 fbdev=1\n"
+  become: true
+
+- name: nvidia | Add NVIDIA modules to mkinitcpio
+  ansible.builtin.lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^MODULES='
+    line: 'MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
+    backrefs: yes
+  become: true
+
+- name: nvidia | Rebuild initramfs
+  ansible.builtin.command: mkinitcpio -P
+  become: true
+
+- name: nvidia | Enable nvidia-persistenced service
+  ansible.builtin.systemd:
+    name: nvidia-persistenced.service
+    enabled: true
+    daemon_reload: true
+  become: true
+
+- name: nvidia | Symlink nvidia-settings desktop entry (hidden from launchers)
+  ansible.builtin.file:
+    src: "{{ playbook_dir }}/../../../dotfiles/home/.local/share/applications/nvidia-settings.desktop"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/nvidia-settings.desktop"
+    state: link
+    force: true

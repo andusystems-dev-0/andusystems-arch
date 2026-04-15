@@ -27,11 +27,6 @@
     validate: visudo -cf %s
   become: true
 
-- name: install | Remove conflicting rust package before rustup install
-  ansible.builtin.shell: pacman -Rdd --noconfirm rust 2>/dev/null || true
-  become: true
-  when: "'rustup' in aur_packages"
-
 - name: install | Install all packages via yay
   ansible.builtin.shell: yay -S --noconfirm --needed --sudoflags "-S" {{ aur_packages | join(' ') }}
 

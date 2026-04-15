@@ -1,0 +1,25 @@
+- name: amd | Enable multilib repository
+  ansible.builtin.blockinfile:
+    path: /etc/pacman.conf
+    marker: "# {mark} ANSIBLE MANAGED MULTILIB"
+    block: |
+      [multilib]
+      Include = /etc/pacman.d/mirrorlist
+  become: true
+
+- name: amd | Allow pacman without password
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/pacman-nopasswd
+    content: "admin ALL=(ALL) NOPASSWD: /usr/bin/pacman\n"
+    validate: visudo -cf %s
+  become: true
+
+- name: amd | Install AMD GPU packages via pacman
+  ansible.builtin.command: pacman -S --noconfirm --needed {{ amd_packages | join(' ') }}
+  become: true
+
+- name: amd | Revoke passwordless pacman after install
+  ansible.builtin.file:
+    path: /etc/sudoers.d/pacman-nopasswd
+    state: absent
+  become: true

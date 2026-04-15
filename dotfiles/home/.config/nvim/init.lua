@@ -37,8 +37,8 @@ local terminal_win = nil
 
 vim.keymap.set("n", "<leader>t", function()
   if terminal_win and vim.api.nvim_win_is_valid(terminal_win) then
-    vim.api.nvim_set_current_win(terminal_win)
-    vim.cmd("startinsert")
+    vim.api.nvim_win_close(terminal_win, false)
+    terminal_win = nil
   else
     vim.cmd("botright 15split")
     terminal_win = vim.api.nvim_get_current_win()
@@ -47,10 +47,10 @@ vim.keymap.set("n", "<leader>t", function()
     else
       vim.cmd("terminal")
       terminal_buf = vim.api.nvim_get_current_buf()
+      vim.cmd("startinsert")
     end
-    vim.cmd("startinsert")
   end
-end, { desc = "Focus terminal" })
+end, { desc = "Toggle terminal" })
 
 -- Escape to go back to normal mode in terminal
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })

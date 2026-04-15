@@ -1,0 +1,54 @@
+- name: cleanup_nvidia | Remove NVIDIA modprobe config if present
+  ansible.builtin.file:
+    path: /etc/modprobe.d/nvidia.conf
+    state: absent
+  become: true
+
+- name: cleanup_nvidia | Remove NVIDIA modules from mkinitcpio
+  ansible.builtin.lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^MODULES=\(.*nvidia.*\)'
+    line: 'MODULES=()'
+    backrefs: yes
+  become: true
+  register: mkinitcpio_changed
+
+- name: cleanup_nvidia | Rebuild initramfs after removing NVIDIA modules
+  ansible.builtin.command: mkinitcpio -P
+  become: true
+  when: mkinitcpio_changed.changed
+
+- name: cleanup_nvidia | Disable nvidia-persistenced if enabled
+  ansible.builtin.systemd:
+    name: nvidia-persistenced.service
+    enabled: false
+    daemon_reload: true
+  become: true
+  failed_when: false
+
+- name: cleanup_nvidia | Check for installed NVIDIA driver packages
+  ansible.builtin.command: pacman -Qq nvidia-open-dkms nvidia-open nvidia-utils lib32-nvidia-utils nvidia-settings
+  register: nvidia_pkgs_check
+  failed_when: false
+  changed_when: false
+
+- name: cleanup_nvidia | Remove NVIDIA driver packages if installed
+  ansible.builtin.command: pacman -Rns --noconfirm {{ nvidia_pkgs_check.stdout_lines | join(' ') }}
+  become: true
+  when: nvidia_pkgs_check.stdout_lines | length > 0
+
+- name: cleanup_nvidia | Check for NVIDIA-only extras (nouveau drivers)
+  ansible.builtin.command: pacman -Qq vulkan-nouveau xf86-video-nouveau
+  register: nvidia_extras_check
+  failed_when: false
+  changed_when: false
+
+- name: cleanup_nvidia | Remove NVIDIA-only extras if installed
+  ansible.builtin.command: pacman -Rns --noconfirm {{ nvidia_extras_check.stdout_lines | join(' ') }}
+  become: true
+  when: nvidia_extras_check.stdout_lines | length > 0
+
+- name: cleanup_nvidia | Remove nvidia-settings desktop entry if present
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/nvidia-settings.desktop"
+    state: absent

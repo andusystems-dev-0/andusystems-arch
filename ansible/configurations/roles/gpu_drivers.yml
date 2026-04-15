@@ -1,0 +1,10 @@
+- name: Install GPU drivers (auto-detected)
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: gpu_drivers
+      tags:
+        - gpu_drivers
+        - install

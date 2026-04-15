@@ -51,13 +51,6 @@
     state: link
     force: true
 
-- name: dotfiles | Symlink nvidia-settings desktop entry (hidden from launchers)
-  ansible.builtin.file:
-    src: "{{ playbook_dir }}/../../../dotfiles/home/.local/share/applications/nvidia-settings.desktop"
-    dest: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/nvidia-settings.desktop"
-    state: link
-    force: true
-  
 - name: dotfiles | Reload systemd user daemon
   ansible.builtin.systemd:
     daemon_reload: true

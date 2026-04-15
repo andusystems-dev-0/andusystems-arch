@@ -1,0 +1,28 @@
+- name: main | Detect GPU hardware
+  import_tasks: detect.yml
+  tags:
+    - install
+
+- name: main | Install NVIDIA drivers
+  import_tasks: nvidia.yml
+  when: has_nvidia_gpu
+  tags:
+    - install
+
+- name: main | Clean up NVIDIA configuration (no NVIDIA GPU found)
+  import_tasks: cleanup_nvidia.yml
+  when: not has_nvidia_gpu
+  tags:
+    - install
+
+- name: main | Install AMD GPU drivers
+  import_tasks: amd.yml
+  when: has_amd_gpu
+  tags:
+    - install
+
+- name: main | Install Intel GPU drivers
+  import_tasks: intel.yml
+  when: has_intel_gpu
+  tags:
+    - install

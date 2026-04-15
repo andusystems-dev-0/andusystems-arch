@@ -3,6 +3,6 @@
 - import_playbook: ./roles/dotfiles.yml
 - import_playbook: ./roles/app_cleanup.yml
 - import_playbook: ./roles/theming.yml
-- import_playbook: ./roles/nvidia.yml
+- import_playbook: ./roles/gpu_drivers.yml
 - import_playbook: ./roles/workspace_repos.yml
 - import_playbook: ./roles/rust_tools.yml
