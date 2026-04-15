@@ -4,22 +4,28 @@
     state: directory
     mode: '0755'
 
+- name: hide_launchers | Check which system desktop files exist
+  ansible.builtin.stat:
+    path: "/usr/share/applications/{{ item }}"
+  loop: "{{ launchers_hide }}"
+  register: launcher_stat
+
 - name: hide_launchers | Copy system desktop file to local dir
   ansible.builtin.copy:
-    src: "/usr/share/applications/{{ item }}"
-    dest: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/{{ item }}"
+    src: "/usr/share/applications/{{ item.item }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/{{ item.item }}"
     remote_src: true
-  loop: "{{ launchers_hide }}"
-  ignore_errors: true
+  loop: "{{ launcher_stat.results }}"
+  when: item.stat.exists
 
 - name: hide_launchers | Set NoDisplay=true in local desktop files
   ansible.builtin.lineinfile:
-    path: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/{{ item }}"
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/{{ item.item }}"
     regexp: "^NoDisplay="
     insertafter: "\\[Desktop Entry\\]"
     line: "NoDisplay=true"
-  loop: "{{ launchers_hide }}"
-  ignore_errors: true
+  loop: "{{ launcher_stat.results }}"
+  when: item.stat.exists
 
 - name: hide_launchers | Refresh desktop database
   ansible.builtin.shell: update-desktop-database "{{ ansible_facts['env']['HOME'] }}/.local/share/applications/"
