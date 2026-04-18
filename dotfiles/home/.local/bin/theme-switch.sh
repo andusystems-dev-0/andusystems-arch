@@ -52,11 +52,3 @@ pkill -SIGUSR2 waybar 2>/dev/null || true
 
 # Reload hyprland to pick up new colors.conf
 hyprctl reload 2>/dev/null || true
-
-# Hot-reload running Neovim instances
-for socket in "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"/nvim.*; do
-    [[ -S "$socket" ]] || continue
-    nvim --server "$socket" --remote-send \
-        '<C-\><C-n>:lua package.loaded["colors.matugen"]=nil; require("mini.base16").setup({palette=require("colors.matugen")})<CR>' \
-        2>/dev/null || true
-done

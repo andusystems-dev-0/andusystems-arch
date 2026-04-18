@@ -176,9 +176,9 @@ authorized_keys
 # -----------------------------------------------------------------------------
 # Stow-created symlinks at repo root (created by dotfiles role)
 # -----------------------------------------------------------------------------
-.config
-.local
-Wallpapers
+/.config
+/.local
+/Wallpapers
 
 # -----------------------------------------------------------------------------
 # Compiled binaries in dotfiles (installed by Ansible, not committed)

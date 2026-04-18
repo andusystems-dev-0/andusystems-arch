@@ -28,10 +28,6 @@ output_path = "~/.config/gtk-3.0/gtk.css"
 input_path = "~/.config/matugen/templates/gtk4.css"
 output_path = "~/.config/gtk-4.0/gtk.css"
 
-[templates.nvim-colors]
-input_path = "~/.config/matugen/templates/nvim-colors.lua"
-output_path = "~/.config/nvim/lua/colors/matugen.lua"
-
 [templates.swaync]
 input_path = "~/.config/matugen/templates/swaync.css"
 output_path = "~/.config/swaync/style.css"
