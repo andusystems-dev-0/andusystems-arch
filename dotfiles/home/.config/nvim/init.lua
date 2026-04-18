@@ -54,18 +54,14 @@ local function open_terminal()
   end
 end
 
-vim.keymap.set("n", "<leader>t", function()
-  -- If terminal window exists and we're in it, go back to previous window
+vim.keymap.set("n", "<leader>tt", function()
   if terminal_win and vim.api.nvim_win_is_valid(terminal_win) then
-    if vim.api.nvim_get_current_win() == terminal_win then
-      vim.cmd("wincmd p")
-    else
-      vim.api.nvim_set_current_win(terminal_win)
-    end
+    vim.api.nvim_win_close(terminal_win, false)
+    terminal_win = nil
   else
     open_terminal()
   end
-end, { desc = "Focus/unfocus terminal" })
+end, { desc = "Toggle terminal" })
 
 -- Escape to go back to normal mode in terminal
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })

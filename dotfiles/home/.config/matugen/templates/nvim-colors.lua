@@ -2,18 +2,18 @@
 return {
   base00 = "{{ colors.background.default.hex }}",               -- main background
   base01 = "{{ colors.surface_container_lowest.default.hex }}", -- status line / gutter bg
-  base02 = "{{ colors.surface_container.default.hex }}",        -- selection / line highlight
-  base03 = "{{ colors.on_surface_variant.default.hex }}",       -- comments
-  base04 = "{{ colors.outline.default.hex }}",                  -- inactive text / line numbers
+  base02 = "{{ colors.surface_container_high.default.hex }}",   -- selection / line highlight
+  base03 = "{{ colors.outline.default.hex }}",                  -- comments
+  base04 = "{{ colors.on_surface_variant.default.hex }}",       -- inactive text / line numbers
   base05 = "{{ colors.on_surface.default.hex }}",               -- default foreground
   base06 = "{{ colors.on_background.default.hex }}",            -- brighter foreground
   base07 = "{{ colors.inverse_surface.default.hex }}",          -- near-white
   base08 = "{{ colors.error.default.hex }}",                    -- red — errors, deleted
-  base09 = "{{ colors.on_tertiary_container.default.hex }}",    -- orange — constants, numbers
-  base0A = "{{ colors.secondary.default.hex }}",                -- yellow — classes, types
-  base0B = "{{ colors.tertiary.default.hex }}",                 -- green — strings
-  base0C = "{{ colors.on_secondary_container.default.hex }}",   -- cyan — built-ins, special
+  base09 = "{{ colors.tertiary.default.hex }}",                 -- teal — constants, numbers
+  base0A = "{{ colors.on_tertiary_container.default.hex }}",    -- green — classes, types
+  base0B = "{{ colors.secondary.default.hex }}",                -- olive/green — strings
+  base0C = "{{ colors.on_secondary_container.default.hex }}",   -- light green — built-ins
   base0D = "{{ colors.primary.default.hex }}",                  -- blue — functions, headings
-  base0E = "{{ colors.primary_container.default.hex }}",        -- purple — keywords
-  base0F = "{{ colors.error_container.default.hex }}",          -- muted — deprecated
+  base0E = "{{ colors.on_primary_container.default.hex }}",     -- light blue — keywords
+  base0F = "{{ colors.inverse_primary.default.hex }}",          -- muted — deprecated
 }

@@ -45,7 +45,7 @@ awww img "$WALLPAPER" \
     --transition-fps 60
 
 # Generate color scheme from wallpaper (outputs to template-defined paths)
-matugen image "$WALLPAPER" --mode dark --prefer saturation
+matugen -t scheme-expressive image "$WALLPAPER" --mode dark --prefer saturation
 
 # Reload waybar styles
 pkill -SIGUSR2 waybar 2>/dev/null || true

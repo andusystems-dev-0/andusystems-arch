@@ -1,5 +1,6 @@
 [config]
 mode = "dark"
+type = "scheme-expressive"
 reload_apps = false
 set_wallpaper = false
 
