@@ -3,6 +3,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     event = "BufReadPost",
+    main = "nvim-treesitter",
     opts = {
       ensure_installed = {
         "bash",
@@ -22,11 +23,7 @@ return {
         "typescript",
         "yaml",
       },
-      highlight = { enable = true },
-      indent = { enable = true },
+      auto_install = true,
     },
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
-    end,
   },
 }

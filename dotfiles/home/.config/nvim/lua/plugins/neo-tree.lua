@@ -38,12 +38,12 @@ return {
         end
       end, { desc = "Focus/unfocus Neo-tree" })
 
-      -- Open on startup
+      -- Open on startup rooted at cwd
       vim.api.nvim_create_autocmd("VimEnter", {
         once = true,
         callback = function()
           vim.schedule(function()
-            vim.cmd("Neotree show")
+            vim.cmd("Neotree show dir=" .. vim.fn.getcwd())
           end)
         end,
       })

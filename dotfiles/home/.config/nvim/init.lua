@@ -39,44 +39,8 @@ require("lazy").setup("plugins", {
 -- Load project terminal autocmds
 require("config.autocmds")
 
--- Terminal: always open by default, <leader>t to focus/unfocus
-local terminal_buf = nil
-local terminal_win = nil
-
-local function open_terminal()
-  vim.cmd("botright 15split")
-  terminal_win = vim.api.nvim_get_current_win()
-  if terminal_buf and vim.api.nvim_buf_is_valid(terminal_buf) then
-    vim.api.nvim_win_set_buf(terminal_win, terminal_buf)
-  else
-    vim.cmd("terminal")
-    terminal_buf = vim.api.nvim_get_current_buf()
-  end
-end
-
-vim.keymap.set("n", "<leader>tt", function()
-  if terminal_win and vim.api.nvim_win_is_valid(terminal_win) then
-    vim.api.nvim_win_close(terminal_win, false)
-    terminal_win = nil
-  else
-    open_terminal()
-  end
-end, { desc = "Toggle terminal" })
-
 -- Escape to go back to normal mode in terminal
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
--- Open terminal on startup
-vim.api.nvim_create_autocmd("VimEnter", {
-  once = true,
-  callback = function()
-    vim.schedule(function()
-      open_terminal()
-      -- Return focus to editor
-      vim.cmd("wincmd p")
-    end)
-  end,
-})
 
 -- Open lazygit in a floating window
 vim.keymap.set("n", "<leader>gg", function()

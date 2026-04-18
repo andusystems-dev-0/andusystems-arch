@@ -18,7 +18,7 @@ use ratatui::{
 const APPS: &[(&str, &str)] = &[
     ("Zen Browser",  "zen-browser"),
     ("Kitty",        "kitty"),
-    ("Neovim",       "kitty -e nvim"),
+    ("Neovim",       "kitty --directory /home/admin/andusystems -e nvim /home/admin/andusystems"),
     ("File Manager", "nautilus"),
 ];
 

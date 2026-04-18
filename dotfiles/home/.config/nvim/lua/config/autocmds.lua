@@ -40,7 +40,30 @@ local function toggle_project_terminals()
   end
 end
 
+-- <leader>tt: open/close terminal splits
 vim.keymap.set("n", "<leader>tt", toggle_project_terminals, { desc = "Toggle project terminals" })
+
+-- <leader>t: focus terminal if in editor, or return to editor if in terminal
+vim.keymap.set("n", "<leader>t", function()
+  local cur_buf = vim.api.nvim_get_current_buf()
+  if vim.bo[cur_buf].buftype == "terminal" then
+    -- In a terminal — jump back to the nearest non-terminal window
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.bo[vim.api.nvim_win_get_buf(win)].buftype ~= "terminal" then
+        vim.api.nvim_set_current_win(win)
+        return
+      end
+    end
+  else
+    -- In editor — jump to the first terminal window
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "terminal" then
+        vim.api.nvim_set_current_win(win)
+        return
+      end
+    end
+  end
+end, { desc = "Focus/unfocus terminal" })
 
 vim.api.nvim_create_autocmd("VimEnter", {
   group = vim.api.nvim_create_augroup("andusystems_terminals", { clear = true }),

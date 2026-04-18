@@ -1,5 +1,5 @@
 return {
-  -- LSP config
+  -- LSP (Neovim 0.11+ native vim.lsp.config API)
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -7,16 +7,15 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Add language servers here as needed
-      local servers = { "lua_ls", "ts_ls", "gopls", "pyright", "rust_analyzer" }
-      for _, server in ipairs(servers) do
-        lspconfig[server].setup({
-          capabilities = capabilities,
-        })
-      end
+      -- Apply capabilities to all servers
+      vim.lsp.config("*", {
+        capabilities = capabilities,
+      })
+
+      -- Enable language servers
+      vim.lsp.enable({ "lua_ls", "ts_ls", "gopls", "pyright", "rust_analyzer" })
 
       -- LSP keymaps (set on attach)
       vim.api.nvim_create_autocmd("LspAttach", {
