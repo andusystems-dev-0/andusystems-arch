@@ -1,3 +1,4 @@
+
 # andusystems-arch
 
 Ansible-managed Arch Linux workstation configuration with Hyprland (Wayland compositor), automated wallpaper-driven Material You theming, and dotfiles management via GNU Stow.
@@ -106,6 +107,7 @@ To adopt new configs:
 ```bash
 ansible-playbook ansible/configurations/arch.yml --tags dotfiles -K
 ```
+
 
 ### Security Model
 
