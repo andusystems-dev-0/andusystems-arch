@@ -1,10 +1,15 @@
-- name: nvidia | Enable multilib repository
+- name: nvidia | Uncomment multilib repository if commented
+  ansible.builtin.replace:
+    path: /etc/pacman.conf
+    regexp: '^#(\[multilib\])\n#(Include = /etc/pacman\.d/mirrorlist)'
+    replace: '\1\n\2'
+  become: true
+
+- name: nvidia | Remove ansible managed multilib block if present
   ansible.builtin.blockinfile:
     path: /etc/pacman.conf
     marker: "# {mark} ANSIBLE MANAGED MULTILIB"
-    block: |
-      [multilib]
-      Include = /etc/pacman.d/mirrorlist
+    state: absent
   become: true
 
 - name: nvidia | Allow pacman without password for yay

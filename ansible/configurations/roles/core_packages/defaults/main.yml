@@ -1,5 +1,4 @@
 aur_packages:
-  - rustup
   - networkmanager
   - neovim
   - stow
@@ -13,3 +12,9 @@ aur_packages:
   - gcc
   - nodejs
   - npm
+  - ripgrep
+  - fd
+  - unzip
+  - curl
+  - wget
+  - luarocks

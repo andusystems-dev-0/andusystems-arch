@@ -9,10 +9,12 @@
   ansible.builtin.shell: makepkg -sf --noconfirm --skippgpcheck
   args:
     chdir: "{{ ansible_facts['env']['HOME'] }}/yay"
+  ignore_errors: true
   become: false
 
 - name: install | Install yay package
   ansible.builtin.shell: pacman -U --noconfirm {{ ansible_facts['env']['HOME'] }}/yay/yay-*.pkg.tar.zst
+  ignore_errors: true
   become: true	
 
 - name: install | Remove yay install directory
@@ -29,6 +31,7 @@
 
 - name: install | Install all packages via yay
   ansible.builtin.shell: yay -S --noconfirm --needed --sudoflags "-S" {{ aur_packages | join(' ') }}
+  ignore_errors: true
 
 - name: install | Revoke passwordless pacman after install
   ansible.builtin.file:

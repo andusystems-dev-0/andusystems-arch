@@ -1,17 +1,3 @@
--- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local out = vim.fn.system({
-    "git", "clone", "--filter=blob:none", "--branch=stable",
-    "https://github.com/folke/lazy.nvim.git", lazypath,
-  })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({ { "Failed to clone lazy.nvim:\n" .. out, "ErrorMsg" } }, true, {})
-    vim.cmd("qa!")
-  end
-end
-vim.opt.rtp:prepend(lazypath)
-
 -- Leader keys (must be set before lazy)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -31,29 +17,70 @@ vim.opt.smartcase = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
--- Toggle terminal split below
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local out = vim.fn.system({
+    "git", "clone", "--filter=blob:none", "--branch=stable",
+    "https://github.com/folke/lazy.nvim.git", lazypath,
+  })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({ { "Failed to clone lazy.nvim:\n" .. out, "ErrorMsg" } }, true, {})
+    vim.cmd("qa!")
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Load plugins from lua/plugins/
+require("lazy").setup("plugins", {
+  change_detection = { notify = false },
+})
+
+-- Load project terminal autocmds
+require("config.autocmds")
+
+-- Terminal: always open by default, <leader>t to focus/unfocus
 local terminal_buf = nil
 local terminal_win = nil
 
-vim.keymap.set("n", "<leader>t", function()
-  if terminal_win and vim.api.nvim_win_is_valid(terminal_win) then
-    vim.api.nvim_win_close(terminal_win, false)
-    terminal_win = nil
+local function open_terminal()
+  vim.cmd("botright 15split")
+  terminal_win = vim.api.nvim_get_current_win()
+  if terminal_buf and vim.api.nvim_buf_is_valid(terminal_buf) then
+    vim.api.nvim_win_set_buf(terminal_win, terminal_buf)
   else
-    vim.cmd("botright 15split")
-    terminal_win = vim.api.nvim_get_current_win()
-    if terminal_buf and vim.api.nvim_buf_is_valid(terminal_buf) then
-      vim.api.nvim_win_set_buf(terminal_win, terminal_buf)
-    else
-      vim.cmd("terminal")
-      terminal_buf = vim.api.nvim_get_current_buf()
-      vim.cmd("startinsert")
-    end
+    vim.cmd("terminal")
+    terminal_buf = vim.api.nvim_get_current_buf()
   end
-end, { desc = "Toggle terminal" })
+end
+
+vim.keymap.set("n", "<leader>t", function()
+  -- If terminal window exists and we're in it, go back to previous window
+  if terminal_win and vim.api.nvim_win_is_valid(terminal_win) then
+    if vim.api.nvim_get_current_win() == terminal_win then
+      vim.cmd("wincmd p")
+    else
+      vim.api.nvim_set_current_win(terminal_win)
+    end
+  else
+    open_terminal()
+  end
+end, { desc = "Focus/unfocus terminal" })
 
 -- Escape to go back to normal mode in terminal
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
+-- Open terminal on startup
+vim.api.nvim_create_autocmd("VimEnter", {
+  once = true,
+  callback = function()
+    vim.schedule(function()
+      open_terminal()
+      -- Return focus to editor
+      vim.cmd("wincmd p")
+    end)
+  end,
+})
 
 -- Open lazygit in a floating window
 vim.keymap.set("n", "<leader>gg", function()
@@ -76,24 +103,3 @@ vim.keymap.set("n", "<leader>gg", function()
   })
   vim.cmd("startinsert")
 end, { desc = "Open lazygit" })
-
--- Load plugins
-require("lazy").setup("plugins", {
-  change_detection = { notify = false },
-})
-
--- On startup: open terminal split then refocus neo-tree
-vim.api.nvim_create_autocmd("VimEnter", {
-  once = true,
-  callback = function()
-    vim.schedule(function()
-      -- Open terminal at bottom
-      vim.cmd("botright 15split")
-      terminal_win = vim.api.nvim_get_current_win()
-      vim.cmd("terminal")
-      terminal_buf = vim.api.nvim_get_current_buf()
-      -- Refocus neo-tree
-      vim.cmd("Neotree focus")
-    end)
-  end,
-})

@@ -6,7 +6,7 @@
   become: true
 
 - name: install | Install all packages via yay
-  ansible.builtin.shell: yay -S --noconfirm --needed --sudoflags "-S" {{ aur_packages | join(' ') }}
+  ansible.builtin.shell: yay -S --noconfirm --needed {{ aur_packages | join(' ') }}
 
 - name: install | Revoke passwordless pacman after install
   ansible.builtin.file:
