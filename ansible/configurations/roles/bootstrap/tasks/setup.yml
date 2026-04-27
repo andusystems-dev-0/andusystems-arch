@@ -51,6 +51,13 @@
   when: item != 'pangolin.service' or pangolin_auth.stat.exists
   become: true
 
+- name: setup | Add user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_facts['env']['USER'] }}"
+    groups: docker
+    append: true
+  become: true
+
 - name: setup | Ensure static /etc/hosts entries are present
   ansible.builtin.lineinfile:
     path: /etc/hosts

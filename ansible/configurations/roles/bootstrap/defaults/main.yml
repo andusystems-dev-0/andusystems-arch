@@ -1,5 +1,6 @@
 enabled_services:
   - bluetooth.service
+  - docker.service
   - pangolin.service
 
 # Static /etc/hosts entries — pinned so name resolution doesn't depend on

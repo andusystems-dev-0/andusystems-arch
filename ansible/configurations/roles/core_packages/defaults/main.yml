@@ -31,6 +31,10 @@ yay_packages:
   - starship
   - hyprpaper
   - nwg-displays
+  - docker
+  - docker-buildx
+  - docker-compose
+  - docker-buildx
 
 # Installed only on hosts where an NVIDIA dGPU is detected (see install.yml).
 # nvidia-open-dkms covers Turing+ (RTX 20-series and newer); switch to
