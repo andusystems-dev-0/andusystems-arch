@@ -1,0 +1,3 @@
+dotfiles_stow_dir: "{{ role_path }}/../../../../dotfiles"
+dotfiles_stow_package: home
+dotfiles_target: "{{ ansible_facts['env']['HOME'] }}"

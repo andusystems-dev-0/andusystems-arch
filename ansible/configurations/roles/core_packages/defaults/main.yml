@@ -1,0 +1,43 @@
+yay_packages:
+  - zen-browser-bin
+  - neovim
+  - lazygit
+  - tmux
+  - btop
+  - claude-code
+  - github-cli
+  - rustup
+  - brightnessctl
+  - hyprsunset
+  - rofi-wayland
+  - qt5ct
+  - qt6ct
+  - xdg-desktop-portal-gtk
+  - gnome-themes-extra
+  - waybar
+  - wl-gammarelay-rs
+  - pavucontrol
+  - bluez
+  - bluez-utils
+  - lm_sensors
+  - jq
+  - grim
+  - slurp
+  - wl-clipboard
+  - ttf-jetbrains-mono-nerd
+  - starship
+  - hyprpaper
+  - nwg-displays
+
+# Installed only on hosts where an NVIDIA dGPU is detected (see install.yml).
+# nvidia-open-dkms covers Turing+ (RTX 20-series and newer); switch to
+# nvidia-dkms for older cards.
+nvidia_packages:
+  - nvidia-open-dkms
+  - nvidia-utils
+  - libva-nvidia-driver
+  - linux-headers  # required for DKMS to build the nvidia module
+
+absent_yay_packages:
+  - dolphin
+  - htop

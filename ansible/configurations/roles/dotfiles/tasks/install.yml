@@ -1,0 +1,98 @@
+- name: install | Ensure stow is installed
+  ansible.builtin.package:
+    name: stow
+    state: present
+  become: true
+
+- name: install | Remove broken stow symlinks under target tree
+  # Walks every relative path in the stow package and removes broken
+  # symlinks at the corresponding target. Catches both file-level links
+  # (e.g. ~/.bashrc) and tree-folded directory links (e.g. ~/.config/nvim)
+  # left over from a renamed or moved repo dir.
+  ansible.builtin.shell: |
+    set -eu
+    pkg_dir={{ (dotfiles_stow_dir ~ '/' ~ dotfiles_stow_package) | quote }}
+    target={{ dotfiles_target | quote }}
+    find "$pkg_dir" -mindepth 1 -print0 \
+      | while IFS= read -r -d '' src; do
+          rel=${src#$pkg_dir/}
+          tgt=$target/$rel
+          if [ -L "$tgt" ] && [ ! -e "$tgt" ]; then
+            rm -- "$tgt"
+            printf 'removed %s\n' "$tgt"
+          fi
+        done
+  register: stale_link_cleanup
+  changed_when: stale_link_cleanup.stdout | length > 0
+  become: false
+
+- name: install | Find all files in stow package
+  ansible.builtin.find:
+    paths: "{{ dotfiles_stow_dir }}/{{ dotfiles_stow_package }}"
+    hidden: true
+    recurse: true
+    file_type: file
+  register: stow_package_files
+  become: false
+
+- name: install | Classify each target path (absent / already-stowed / conflict)
+  ansible.builtin.shell: |
+    set -u
+    src={{ item.path | quote }}
+    rel=$(realpath --relative-to={{ (dotfiles_stow_dir ~ '/' ~ dotfiles_stow_package) | quote }} "$src")
+    tgt={{ dotfiles_target | quote }}/$rel
+    if [ ! -e "$tgt" ] && [ ! -L "$tgt" ]; then
+      printf 'absent\t%s\n' "$tgt"
+    elif [ "$(readlink -f "$tgt")" = "$(readlink -f "$src")" ]; then
+      printf 'stowed\t%s\n' "$tgt"
+    else
+      printf 'conflict\t%s\n' "$tgt"
+    fi
+  loop: "{{ stow_package_files.files }}"
+  loop_control:
+    label: "{{ item.path | relpath(dotfiles_stow_dir ~ '/' ~ dotfiles_stow_package) }}"
+  register: target_status
+  changed_when: false
+  become: false
+
+- name: install | Collect conflicting target paths
+  ansible.builtin.set_fact:
+    dotfiles_conflicts: >-
+      {{ target_status.results
+         | map(attribute='stdout')
+         | select('match', '^conflict\t')
+         | map('regex_replace', '^conflict\t', '')
+         | list }}
+    dotfiles_backup_dir: "{{ dotfiles_target }}/.dotfiles-backup/{{ ansible_facts['date_time']['iso8601_basic_short'] }}"
+
+- name: install | Ensure backup parent directories exist
+  ansible.builtin.file:
+    path: "{{ (dotfiles_backup_dir ~ '/' ~ (item | relpath(dotfiles_target))) | dirname }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ dotfiles_conflicts }}"
+  become: false
+
+- name: install | Back up conflicting files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ dotfiles_backup_dir }}/{{ item | relpath(dotfiles_target) }}"
+    remote_src: true
+    mode: preserve
+  loop: "{{ dotfiles_conflicts }}"
+  become: false
+
+- name: install | Remove conflicting files after backup
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ dotfiles_conflicts }}"
+  become: false
+
+- name: install | Stow dotfiles package into home
+  ansible.builtin.command: stow --restow --target={{ dotfiles_target }} {{ dotfiles_stow_package }}
+  args:
+    chdir: "{{ dotfiles_stow_dir }}"
+  become: false
+  register: stow_result
+  changed_when: stow_result.stderr | length > 0

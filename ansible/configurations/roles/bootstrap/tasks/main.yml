@@ -1,0 +1,4 @@
+- name: main | Bootstrap system
+  import_tasks: setup.yml
+  tags:
+    - install

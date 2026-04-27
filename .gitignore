@@ -1,0 +1,309 @@
+# =============================================================================
+# andusystems-dotfiles .gitignore
+#
+# Defense-in-depth for a GNU Stow dotfiles repo on Arch Linux.
+# Goal: never commit secrets, session state, caches, or history.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# AI assistant local files (session state, caches, project-local settings)
+# -----------------------------------------------------------------------------
+.claude/
+.claude.json
+.cursor/
+.aider*
+.continue/
+.github/copilot/
+dotfiles/home/.config/claude/
+dotfiles/home/.config/Cursor/
+dotfiles/home/.config/github-copilot/
+dotfiles/home/.anthropic/
+dotfiles/home/.config/anthropic/
+dotfiles/home/.openai/
+dotfiles/home/.config/openai/
+dotfiles/home/.huggingface/
+dotfiles/home/.config/huggingface/
+dotfiles/home/.kaggle/
+
+# -----------------------------------------------------------------------------
+# Python bytecode
+# -----------------------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+
+# -----------------------------------------------------------------------------
+# Ansible
+# -----------------------------------------------------------------------------
+*.retry
+.vault_pass
+.vault_pass*
+vault.yml
+vault.yaml
+*.vault.yml
+*.vault.yaml
+**/host_vars/**/vault*
+**/group_vars/**/vault*
+local.yml
+local.yaml
+.ansible-lint-cache/
+
+# -----------------------------------------------------------------------------
+# Desktop runtime state — not part of a reproducible config
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/session/
+dotfiles/home/.config/pulse/
+dotfiles/home/.config/ibus/
+dotfiles/home/.config/dconf/
+dotfiles/home/.config/gtk-3.0/
+dotfiles/home/.config/gtk-4.0/
+dotfiles/home/.config/mimeapps.list
+
+# -----------------------------------------------------------------------------
+# Browser / chat client profiles (cookies, sessions, message history)
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/zen/
+dotfiles/home/.config/chromium/
+dotfiles/home/.config/google-chrome/
+dotfiles/home/.config/BraveSoftware/
+dotfiles/home/.config/firefox/
+dotfiles/home/.config/vivaldi/
+dotfiles/home/.config/opera/
+dotfiles/home/.config/thunderbird/
+dotfiles/home/.config/discord/
+dotfiles/home/.config/Slack/
+dotfiles/home/.config/Element/
+dotfiles/home/.config/Signal/
+dotfiles/home/.config/SchildiChat/
+dotfiles/home/.config/Telegram*/
+
+# -----------------------------------------------------------------------------
+# Password managers / secret stores
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/Bitwarden/
+dotfiles/home/.config/Vaultwarden/
+dotfiles/home/.config/keepassxc/
+dotfiles/home/.password-store/
+dotfiles/home/.vault-token
+
+# -----------------------------------------------------------------------------
+# IDE / editor session data and tokens
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/Code/
+dotfiles/home/.config/Code - OSS/
+dotfiles/home/.config/VSCodium/
+dotfiles/home/.config/JetBrains/
+dotfiles/home/.config/cursor/
+
+# -----------------------------------------------------------------------------
+# Toolchain caches with credentials / tokens
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/go/
+dotfiles/home/.config/gh/
+dotfiles/home/.config/helm/
+dotfiles/home/.config/op/
+dotfiles/home/.config/rclone/
+dotfiles/home/.config/restic/
+dotfiles/home/.config/borg/
+dotfiles/home/.config/sops/
+dotfiles/home/.config/age/
+
+# -----------------------------------------------------------------------------
+# Cluster / cloud CLI credentials
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/argocd/
+dotfiles/home/.config/k9s/
+dotfiles/home/.config/kube/
+dotfiles/home/.config/doctl/
+dotfiles/home/.config/gcloud/
+dotfiles/home/.config/azure/
+
+# -----------------------------------------------------------------------------
+# Editor plugin data / state (not part of the tracked config)
+# -----------------------------------------------------------------------------
+dotfiles/home/.local/share/nvim/
+dotfiles/home/.local/state/nvim/
+dotfiles/home/.cache/nvim/
+dotfiles/home/.local/state/hypr/
+dotfiles/home/.cache/hypr/
+# keep nvim/ config but ignore plugin install dir if it lands inside it
+dotfiles/home/.config/nvim/plugin/packer_compiled.lua
+dotfiles/home/.config/nvim/.netrwhist
+
+# -----------------------------------------------------------------------------
+# Broad cache / state catch-alls (tool-generated, machine-specific)
+# -----------------------------------------------------------------------------
+dotfiles/home/.cache/
+dotfiles/home/.local/state/
+dotfiles/home/.local/share/Trash/
+dotfiles/home/.local/share/recently-used.xbel
+
+# -----------------------------------------------------------------------------
+# Sensitive home-level dot directories
+# -----------------------------------------------------------------------------
+dotfiles/home/.ssh/
+dotfiles/home/.gnupg/
+dotfiles/home/.kube/
+dotfiles/home/.ansible/
+dotfiles/home/.terraform.d/
+dotfiles/home/.docker/
+dotfiles/home/.aws/
+dotfiles/home/.gcloud/
+dotfiles/home/.azure/
+dotfiles/home/.npm/
+dotfiles/home/.cargo/
+dotfiles/home/.rustup/
+dotfiles/home/.ollama/
+dotfiles/home/.pki/
+dotfiles/home/.gnome/
+dotfiles/home/.mozilla/
+dotfiles/home/.thunderbird/
+dotfiles/home/.local/share/keyrings/
+dotfiles/home/.netrc
+dotfiles/home/.pgpass
+dotfiles/home/.my.cnf
+dotfiles/home/.pypirc
+dotfiles/home/.boto
+dotfiles/home/.git-credentials
+dotfiles/home/.config/git/credentials
+dotfiles/home/.npmrc
+dotfiles/home/.yarnrc
+dotfiles/home/.yarnrc.yml
+dotfiles/home/.gem/
+dotfiles/home/.m2/
+dotfiles/home/.gradle/
+dotfiles/home/.pip/
+dotfiles/home/.config/pip/
+dotfiles/home/.cabal/
+dotfiles/home/.stack/
+dotfiles/home/.composer/
+dotfiles/home/.bun/
+dotfiles/home/.deno/
+dotfiles/home/.pnpm-store/
+dotfiles/home/.yarn/
+dotfiles/home/.nuget/
+dotfiles/home/.dotnet/
+
+# Flatpak / container / gaming state (machine-local, often large)
+dotfiles/home/.var/
+dotfiles/home/.local/share/flatpak/
+dotfiles/home/.local/share/containers/
+dotfiles/home/.local/share/Steam/
+dotfiles/home/.local/share/lutris/
+dotfiles/home/.local/share/heroic/
+dotfiles/home/.terraformrc
+dotfiles/home/.fly/
+dotfiles/home/.config/flyctl/
+dotfiles/home/.supabase/
+dotfiles/home/.config/supabase/
+
+# -----------------------------------------------------------------------------
+# Shell / tool history (may contain accidentally-pasted secrets)
+# -----------------------------------------------------------------------------
+dotfiles/home/.bash_history
+dotfiles/home/.zsh_history
+dotfiles/home/.python_history
+dotfiles/home/.node_repl_history
+dotfiles/home/.lesshst
+dotfiles/home/.viminfo
+dotfiles/home/.wget-hsts
+dotfiles/home/.psql_history
+dotfiles/home/.mysql_history
+dotfiles/home/.sqlite_history
+dotfiles/home/.config/fish/fish_history
+dotfiles/home/.local/share/fish/
+dotfiles/home/.local/share/atuin/
+dotfiles/home/.config/atuin/
+
+# -----------------------------------------------------------------------------
+# Generic secret / credential patterns (apply anywhere in the repo)
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.sample
+secrets.yml
+secrets.yaml
+secrets.json
+credentials
+credentials.json
+credentials.yml
+credentials.yaml
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*_rsa
+*_dsa
+*_ecdsa
+*_ed25519
+known_hosts
+authorized_keys
+
+# -----------------------------------------------------------------------------
+# Stow-created symlinks at repo root
+# -----------------------------------------------------------------------------
+/.config
+/.local
+
+# -----------------------------------------------------------------------------
+# Wallpapers — machine-local, don't push binaries to GitHub
+# -----------------------------------------------------------------------------
+/wallpapers/
+
+# -----------------------------------------------------------------------------
+# systemd user unit enablement state (symlinks into absolute $HOME paths —
+# created by `systemctl --user enable`, not source config)
+# -----------------------------------------------------------------------------
+dotfiles/home/.config/systemd/user/*.target.wants/
+dotfiles/home/.config/systemd/user/default.target.wants/
+dotfiles/home/.config/systemd/user/sockets.target.wants/
+
+# -----------------------------------------------------------------------------
+# Build artifacts / dev tool clutter
+# -----------------------------------------------------------------------------
+**/target/
+node_modules/
+.direnv/
+.venv/
+venv/
+*.log
+
+# -----------------------------------------------------------------------------
+# Editor / OS cruft
+# -----------------------------------------------------------------------------
+*.swp
+*.swo
+*.swn
+*~
+*.bak
+*.backup
+*.orig
+*.rej
+.#*
+\#*#
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -----------------------------------------------------------------------------
+# Temp files / runtime sockets / crash dumps
+# -----------------------------------------------------------------------------
+*.tmp
+*.temp
+*.pid
+*.sock
+*.lock
+core
+core.*
+*.crash
+*.dmp

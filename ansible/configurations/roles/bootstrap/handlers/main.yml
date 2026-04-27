@@ -1,0 +1,11 @@
+- name: Restart pangolin
+  ansible.builtin.systemd_service:
+    name: pangolin.service
+    state: restarted
+    daemon_reload: true
+  become: true
+
+# SIGHUP makes logind re-read its config without tearing down sessions.
+- name: Reload logind
+  ansible.builtin.command: systemctl kill -s HUP systemd-logind
+  become: true

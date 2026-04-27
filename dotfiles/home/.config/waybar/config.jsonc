@@ -1,0 +1,97 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 4,
+    "margin": 0,
+
+    "modules-left": ["custom/sysmon"],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": ["clock", "custom/settings"],
+
+    "custom/settings": {
+        "format": "⚙",
+        "tooltip": true,
+        "tooltip-format": "Settings",
+        "on-click": "~/.config/waybar/scripts/settings-menu.sh"
+    },
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "active": "●",
+            "default": "○",
+            "urgent": "●",
+            "empty": "○"
+        },
+        "on-click": "activate",
+        "sort-by": "id"
+    },
+
+    "clock": {
+        "interval": 1,
+        "format": "{:%m-%d-%y %I:%M:%S %p}",
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "weeks-pos": "right",
+            "on-scroll": 1,
+            "format": {
+                "months":     "<span color='#ffffff'><b>{}</b></span>",
+                "days":       "<span color='#dcdcdc'>{}</span>",
+                "weeks":      "<span color='#888888'><i>W{}</i></span>",
+                "weekdays":   "<span color='#bbbbbb'><b>{}</b></span>",
+                "today":      "<span color='#00ff99'><b><u>{}</u></b></span>"
+            }
+        }
+    },
+
+    "custom/display": {
+        "format": "☀",
+        "tooltip": true,
+        "tooltip-format": "Display — brightness, warmth, gamma",
+        "on-click": "kitty --class display-float -T 'Display' -e ~/.config/waybar/scripts/display-menu.sh"
+    },
+
+    "custom/network": {
+        "format": "≋",
+        "exec": "~/.config/waybar/scripts/network-tooltip.sh",
+        "interval": 15,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/scripts/network-menu.sh"
+    },
+
+    "custom/bluetooth": {
+        "format": "ᛒ",
+        "exec": "~/.config/waybar/scripts/bluetooth-tooltip.sh",
+        "interval": 15,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/scripts/bluetooth-menu.sh"
+    },
+
+    "custom/audio": {
+        "format": "♪",
+        "exec": "~/.config/waybar/scripts/audio-tooltip.sh",
+        "interval": 3,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/scripts/audio-menu.sh",
+        "on-scroll-up": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+    },
+
+    "custom/sysmon": {
+        "format": "⚡",
+        "exec": "~/.config/waybar/scripts/sysmon-tooltip.sh",
+        "interval": 3,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/scripts/sysmon.sh"
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "tooltip": true,
+        "tooltip-format": "Power menu",
+        "on-click": "~/.config/waybar/scripts/power-menu.sh"
+    }
+}

@@ -1,0 +1,75 @@
+configuration {
+    modi: "drun";
+    show-icons: false;
+    font: "monospace Bold 11";
+    drun-display-format: "{name}";
+    hide-scrollbar: true;
+    display-drun: "";
+    sidebar-mode: false;
+}
+
+@theme "/dev/null"
+
+* {
+    bg:       #141418;
+    bg-alt:   #1f1f28;
+    fg:       #dcd7ba;
+    fg-alt:   #ff9e3b;
+    border:   #2a2a37;
+
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+window {
+    background-color: @bg;
+    border:           1px;
+    border-color:     @border;
+    border-radius:    0px;
+    width:            30em;
+    padding:          0;
+}
+
+mainbox {
+    padding:  10px 6px;
+    spacing:  8px;
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    children: [ prompt, entry ];
+    spacing:  6px;
+}
+
+prompt {
+    text-color: @fg;
+    str:        ">";
+}
+
+entry {
+    text-color:  @fg;
+    placeholder: "";
+    cursor:      text;
+}
+
+listview {
+    lines:     8;
+    spacing:   2px;
+    scrollbar: false;
+    fixed-height: true;
+}
+
+element {
+    padding:       2px 3px;
+    border-radius: 0px;
+}
+
+element selected {
+    background-color: @bg-alt;
+    text-color:       @fg-alt;
+}
+
+element-text {
+    background-color: inherit;
+    text-color:       inherit;
+}

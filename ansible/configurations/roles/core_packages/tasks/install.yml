@@ -1,0 +1,135 @@
+# Yay is written in Go and built from source via makepkg, so it needs
+# the Go toolchain present before the build step below. base-devel is
+# expected to already be installed manually before bootstrap.
+- name: install | Install yay build dependencies
+  ansible.builtin.pacman:
+    name: go
+    state: present
+  become: true
+
+# Yay install
+- name: install | Clone yay
+  ansible.builtin.git:
+    repo: https://aur.archlinux.org/yay.git
+    dest: "{{ ansible_facts['env']['HOME'] }}/yay"
+  become: false
+
+- name: install | Build and install yay
+  ansible.builtin.shell: makepkg -sf --noconfirm --skippgpcheck
+  args:
+    chdir: "{{ ansible_facts['env']['HOME'] }}/yay"
+  ignore_errors: true
+  become: false
+
+- name: install | Install yay package
+  ansible.builtin.shell: pacman -U --noconfirm {{ ansible_facts['env']['HOME'] }}/yay/yay-*.pkg.tar.zst
+  ignore_errors: true
+  become: true	
+
+- name: install | Remove yay install directory
+  ansible.builtin.file:
+    path: /home/admin/yay/
+    state: absent
+
+# Passwordless sudo
+- name: install | Allow pacman without password for yay
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/pacman-nopasswd
+    content: "admin ALL=(ALL) NOPASSWD: /usr/bin/pacman\n"
+    validate: visudo -cf %s
+  become: true
+
+# Install yay packages
+- name: install | Install all packages via yay
+  ansible.builtin.shell: yay -S --noconfirm --needed --sudoflags "-S" {{ yay_packages | join(' ') }}
+  ignore_errors: true
+
+# NVIDIA dGPU detection — only installs nvidia_packages on hosts with an
+# NVIDIA display-class PCI device. AMD-only laptops fall through with no-op.
+- name: install | Detect NVIDIA dGPU
+  ansible.builtin.shell: "lspci -d 10de:: -nn | grep -Eq '\\[03[0-9a-f]{2}\\]'"
+  register: nvidia_gpu_check
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: install | Install NVIDIA packages
+  ansible.builtin.shell: yay -S --noconfirm --needed --sudoflags "-S" {{ nvidia_packages | join(' ') }}
+  when: nvidia_gpu_check.rc == 0
+  ignore_errors: true
+
+# Blacklist nouveau so the proprietary nvidia module wins on next boot.
+- name: install | Blacklist nouveau
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/blacklist-nouveau.conf
+    content: |
+      blacklist nouveau
+      options nouveau modeset=0
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  when: nvidia_gpu_check.rc == 0
+  notify: rebuild initramfs
+
+# Load nvidia modules early in initramfs (required for KMS / no-flicker boot).
+- name: install | Set nvidia modules in mkinitcpio.conf
+  ansible.builtin.lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^MODULES='
+    line: 'MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
+  become: true
+  when: nvidia_gpu_check.rc == 0
+  notify: rebuild initramfs
+
+# Add nvidia_drm.modeset=1 to GRUB cmdline if not already present.
+# Negative lookahead in regexp makes this idempotent — no match = no change.
+- name: install | Add nvidia_drm.modeset=1 to GRUB cmdline
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    backrefs: true
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?!.*nvidia_drm\.modeset=1).*)"$'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 nvidia_drm.modeset=1"'
+  become: true
+  when: nvidia_gpu_check.rc == 0
+  notify: regenerate grub config
+
+# Remove unwanted packages (skips any that aren't currently installed)
+- name: install | Detect which absent packages are actually installed
+  ansible.builtin.shell: |
+    set -eu
+    for pkg in {{ absent_yay_packages | join(' ') }}; do
+      pacman -Qq "$pkg" >/dev/null 2>&1 && printf '%s ' "$pkg" || true
+    done
+  register: installed_unwanted
+  changed_when: false
+  when: absent_yay_packages | default([]) | length > 0
+
+- name: install | Remove unwanted packages
+  ansible.builtin.shell: pacman -Rns --noconfirm {{ installed_unwanted.stdout | trim }}
+  become: true
+  when:
+    - absent_yay_packages | default([]) | length > 0
+    - installed_unwanted.stdout | default('') | trim | length > 0
+
+# Pangolin install
+
+- name: install | Check if Pangolin CLI is already installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/pangolin
+  register: pangolin_binary
+
+- name: install | Install Pangolin CLI via upstream script
+  ansible.builtin.shell: curl -fsSL https://static.pangolin.net/get-cli.sh | bash
+  become: true
+  when: not pangolin_binary.stat.exists
+  changed_when: true
+
+# Revoke passwordless sudo
+- name: install | Revoke passwordless pacman after install
+  ansible.builtin.file:
+    path: /etc/sudoers.d/pacman-nopasswd
+    state: absent
+  become: true
+
+

@@ -1,0 +1,101 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: monospace;
+    font-size: 15px;
+    font-weight: bold;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+window#waybar {
+    background: transparent;
+    color: #dcd7ba;
+    transition: none;
+}
+
+tooltip {
+    background: rgba(20, 20, 24, 0.95);
+    border: 1px solid #2a2a37;
+    border-radius: 0;
+}
+
+tooltip label {
+    color: #dcd7ba;
+    padding: 4px 6px;
+}
+
+#workspaces {
+    margin-left: 6px;
+}
+
+#workspaces button {
+    padding: 0 7px;
+    color: #727169;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#workspaces button.active {
+    color: #ff9e3b;
+}
+
+#workspaces button.urgent {
+    color: #ff5d62;
+}
+
+#workspaces button:hover {
+    color: #dcd7ba;
+    background: transparent;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#clock {
+    color: #dcd7ba;
+    padding: 0 12px;
+}
+
+#custom-display,
+#custom-network,
+#custom-bluetooth,
+#custom-audio,
+#custom-sysmon,
+#custom-power,
+#custom-settings {
+    padding: 0 9px;
+    color: #c8c093;
+}
+
+#custom-display:hover,
+#custom-network:hover,
+#custom-bluetooth:hover,
+#custom-audio:hover,
+#custom-sysmon:hover,
+#custom-power:hover,
+#custom-settings:hover {
+    color: #ff9e3b;
+}
+
+/* First icon on the bar: a little left padding so it doesn't hug the edge */
+#custom-sysmon {
+    padding-left: 10px;
+    font-size: 22px;
+}
+
+/* Settings gear sits on the right edge — a bit of right padding */
+#custom-settings {
+    padding-right: 12px;
+    font-size: 22px;
+}
+
+#custom-power {
+    color: #c8c093;
+}
+
+#custom-power:hover {
+    color: #ff5d62;
+}

@@ -1,0 +1,144 @@
+- name: setup | Install pangolin systemd unit
+  ansible.builtin.copy:
+    src: pangolin.service
+    dest: /etc/systemd/system/pangolin.service
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Restart pangolin
+
+- name: setup | Ensure logind drop-in directory exists
+  ansible.builtin.file:
+    path: /etc/systemd/logind.conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+
+- name: setup | Disable lid-close suspend so media keeps playing
+  ansible.builtin.copy:
+    src: keep-awake-on-lid.conf
+    dest: /etc/systemd/logind.conf.d/keep-awake-on-lid.conf
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Reload logind
+
+- name: setup | Check for cached pangolin auth state
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/pangolin/accounts.json"
+  register: pangolin_auth
+  become: false
+
+- name: setup | Notify that pangolin login is required before service can start
+  ansible.builtin.debug:
+    msg: >-
+      pangolin.service installed but not started: no auth state found at
+      ~/.config/pangolin/accounts.json. Run `pangolin login`, then either
+      re-run this playbook or `sudo systemctl enable --now pangolin`.
+  when: not pangolin_auth.stat.exists
+
+- name: setup | Enable and start system services
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+    daemon_reload: true
+  loop: "{{ enabled_services }}"
+  when: item != 'pangolin.service' or pangolin_auth.stat.exists
+  become: true
+
+- name: setup | Ensure static /etc/hosts entries are present
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^[^#]*\s{{ item.name | regex_escape }}(\s|$)'
+    line: '{{ item.ip }} {{ item.name }}'
+    state: present
+    owner: root
+    group: root
+    mode: '0644'
+  loop: "{{ extra_hosts }}"
+  become: true
+
+- name: setup | Set default Rust toolchain
+  ansible.builtin.command: rustup default stable
+  args:
+    creates: "{{ ansible_facts['env']['HOME'] }}/.rustup/toolchains"
+  become: false
+
+- name: setup | Detect running Hyprland session
+  ansible.builtin.command: pgrep -x Hyprland
+  register: hyprland_pgrep
+  changed_when: false
+  failed_when: false
+  become: false
+
+- name: setup | Reload Hyprland config
+  ansible.builtin.command: hyprctl reload
+  when: hyprland_pgrep.rc == 0
+  changed_when: false
+  failed_when: false
+  become: false
+
+- name: setup | Get current global git user.email
+  ansible.builtin.command: git config --global --get user.email
+  register: git_user_email
+  changed_when: false
+  failed_when: false
+  become: false
+
+- name: setup | Set global git user.email
+  ansible.builtin.command: git config --global user.email alex@andusystems.com
+  when: git_user_email.stdout != 'alex@andusystems.com'
+  become: false
+
+- name: setup | Get current global git user.name
+  ansible.builtin.command: git config --global --get user.name
+  register: git_user_name
+  changed_when: false
+  failed_when: false
+  become: false
+
+- name: setup | Set global git user.name
+  ansible.builtin.command: git config --global user.name Alex
+  when: git_user_name.stdout != 'Alex'
+  become: false
+
+- name: setup | Get current GNOME color-scheme
+  ansible.builtin.command: gsettings get org.gnome.desktop.interface color-scheme
+  register: gsettings_color_scheme
+  changed_when: false
+  failed_when: false
+  become: false
+
+- name: setup | Set GNOME color-scheme to prefer-dark
+  ansible.builtin.command: gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+  when: "'prefer-dark' not in gsettings_color_scheme.stdout"
+  become: false
+
+- name: setup | Get current GNOME gtk-theme
+  ansible.builtin.command: gsettings get org.gnome.desktop.interface gtk-theme
+  register: gsettings_gtk_theme
+  changed_when: false
+  failed_when: false
+  become: false
+
+- name: setup | Set GNOME gtk-theme to Adwaita-dark
+  ansible.builtin.command: gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
+  when: "'Adwaita-dark' not in gsettings_gtk_theme.stdout"
+  become: false
+
+- name: setup | Get current GNOME cursor-blink
+  ansible.builtin.command: gsettings get org.gnome.desktop.interface cursor-blink
+  register: gsettings_cursor_blink
+  changed_when: false
+  failed_when: false
+  become: false
+
+- name: setup | Disable GNOME cursor-blink
+  ansible.builtin.command: gsettings set org.gnome.desktop.interface cursor-blink false
+  when: "'false' not in gsettings_cursor_blink.stdout"
+  become: false

@@ -1,0 +1,18 @@
+[Unit]
+Description=Pangolin tunnel client
+Documentation=https://docs.fossorial.io/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Run as root so pangolin can manage the TUN interface and write to /etc/pangolin.
+# Point HOME at admin's config so the daemon finds the cached auth state
+# in ~/.config/pangolin/accounts.json — mirrors what `sudo pangolin up` does.
+Environment=HOME=/home/admin
+ExecStart=/usr/local/bin/pangolin up --attach --silent
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

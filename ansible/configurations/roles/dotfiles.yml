@@ -1,0 +1,10 @@
+- name: Install dotfiles
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: dotfiles
+      tags:
+        - dotfiles
+        - install

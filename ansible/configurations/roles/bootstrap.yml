@@ -1,0 +1,10 @@
+- name: Bootstrap system configuration
+  gather_facts: true
+  hosts: localhost
+  tasks:
+
+    - include_role:
+        name: bootstrap
+      tags:
+        - bootstrap
+        - install

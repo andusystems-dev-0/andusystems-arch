@@ -1,0 +1,20 @@
+# =============================================================================
+# starship — minimal prompt. Directory + git branch, then arrow on a new line.
+# =============================================================================
+
+add_newline = false
+command_timeout = 1000
+
+format = "$directory "
+
+[directory]
+style = "bold #ffffff"
+format = "[$path]($style)[$read_only]($read_only_style)"
+read_only = " ×"
+read_only_style = "#ff5d62"
+truncation_length = 3
+truncation_symbol = "…/"
+truncate_to_repo = false
+
+[cmd_duration]
+disabled = true

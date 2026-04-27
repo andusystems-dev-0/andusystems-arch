@@ -1,0 +1,9 @@
+enabled_services:
+  - bluetooth.service
+  - pangolin.service
+
+# Static /etc/hosts entries — pinned so name resolution doesn't depend on
+# external DNS at startup. Pangolin's hole-punch resolver is sensitive to
+# transient DNS flakes; pinning the control-plane host avoids that.
+extra_hosts:
+  - { ip: '76.13.98.200', name: 'pangolin.andusystems.com' }
