@@ -6,6 +6,9 @@ yay_packages:
   - btop
   - claude-code
   - github-cli
+  - npm
+  - discord
+  - ollama-cuda
   - rustup
   - brightnessctl
   - hyprsunset
