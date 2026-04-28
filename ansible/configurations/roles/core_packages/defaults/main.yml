@@ -35,6 +35,7 @@ yay_packages:
   - docker-buildx
   - docker-compose
   - docker-buildx
+  - python-kubernetes
 
 # Installed only on hosts where an NVIDIA dGPU is detected (see install.yml).
 # nvidia-open-dkms covers Turing+ (RTX 20-series and newer); switch to
