@@ -35,4 +35,6 @@ ansible-playbook -i ansible/inventory/hosts ansible/playbooks/site.yml
 
 - Arch Linux (fresh install via archinstall)
 - GNU Stow
+- Python
+- Git
 - Ansible
