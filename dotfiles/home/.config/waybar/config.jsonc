@@ -1,13 +1,41 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 32,
+    "height": 24,
     "spacing": 4,
     "margin": 0,
 
-    "modules-left": ["custom/sysmon"],
+    "modules-left": ["custom/sysmon-stats"],
     "modules-center": ["hyprland/workspaces"],
-    "modules-right": ["clock", "custom/settings"],
+    "modules-right": ["group/tray-drawer", "clock"],
+
+    "custom/sysmon-stats": {
+        "format": "{}",
+        "exec": "~/.config/waybar/scripts/sysmon-stats.sh",
+        "interval": 3,
+        "tooltip": false
+    },
+
+    "group/tray-drawer": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "children-class": "tray-child",
+            "transition-left-to-right": false
+        },
+        "modules": ["custom/tray-toggle", "tray", "custom/settings", "custom/sysmon"]
+    },
+
+    "custom/tray-toggle": {
+        "format": "❮",
+        "tooltip": true,
+        "tooltip-format": "Tray"
+    },
+
+    "tray": {
+        "icon-size": 14,
+        "spacing": 6
+    },
 
     "custom/settings": {
         "format": "⚙",
@@ -30,7 +58,7 @@
 
     "clock": {
         "interval": 1,
-        "format": "{:%m-%d-%y %I:%M:%S %p}",
+        "format": "{:%I:%M:%S %p | %m-%d-%y}",
         "tooltip-format": "<tt>{calendar}</tt>",
         "calendar": {
             "mode": "month",

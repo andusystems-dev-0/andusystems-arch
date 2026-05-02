@@ -18,6 +18,9 @@ yay_packages:
   - xdg-desktop-portal-gtk
   - gnome-themes-extra
   - waybar
+  # Bridges legacy XEmbed tray icons (Discord, Steam) onto the StatusNotifierItem
+  # bus so waybar's `tray` module can display them under Wayland.
+  - snixembed
   - wl-gammarelay-rs
   - pavucontrol
   - bluez
@@ -36,6 +39,11 @@ yay_packages:
   - docker-compose
   - docker-buildx
   - python-kubernetes
+  # Homelab CLI tooling — required by the andusystems Ansible playbooks.
+  - terraform
+  - helm
+  - kubectl
+  - argocd
 
 # Installed only on hosts where an NVIDIA dGPU is detected (see install.yml).
 # nvidia-open-dkms covers Turing+ (RTX 20-series and newer); switch to
