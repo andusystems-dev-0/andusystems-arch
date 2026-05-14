@@ -1,6 +1,6 @@
 # Development guide
 
-This document covers local setup, day-to-day workflow, and how to extend the configuration.
+This document covers local setup, day-to-day workflow, and how to extend the configuration
 
 ---
 
