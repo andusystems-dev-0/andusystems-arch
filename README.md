@@ -1,6 +1,6 @@
 # andusystems-arch
 
-Dotfiles and Ansible configuration for a fresh Arch Linux install, managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Dotfiles and Ansible configuration for a fresh Arch Linux Hyprland install, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Structure
 
