@@ -110,8 +110,8 @@
   become: false
 
 - name: setup | Set global git user.name
-  ansible.builtin.command: git config --global user.name Alex
-  when: git_user_name.stdout != 'Alex'
+  ansible.builtin.command: git config --global user.name the operator
+  when: git_user_name.stdout != 'the operator'
   become: false
 
 - name: setup | Get current GNOME color-scheme
